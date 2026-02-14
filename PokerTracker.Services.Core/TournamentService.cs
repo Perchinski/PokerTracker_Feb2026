@@ -21,6 +21,7 @@ namespace PokerTracker.Services.Core
                     Id = f.Id,
                     Name = f.Name
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -33,9 +34,7 @@ namespace PokerTracker.Services.Core
                 ImageUrl = model.ImageUrl,
                 Date = model.Date,
                 FormatId = model.FormatId,
-                CreatorId = userId,
-                // WinnerId is null by default
-                // IsDeleted is false by default
+                CreatorId = userId
             };
 
             await context.Tournaments.AddAsync(tournament);
@@ -44,21 +43,48 @@ namespace PokerTracker.Services.Core
 
         public async Task<IEnumerable<TournamentIndexViewModel>> GetAllTournamentsAsync()
         {
-            return await context.Tournaments
-        .Select(t => new TournamentIndexViewModel
-        {
-            Id = t.Id,
-            Name = t.Name,
-            Format = t.Format.Name,
-            Creator = t.Creator.UserName!, 
-            Date = t.Date,
-            Status = t.Date < DateTime.Now ? "Finished" : "Open"
-        })
-        .OrderByDescending(t => t.Date)
-        .ThenBy(t => t.Name)
-        .AsNoTracking()
-        .ToListAsync();
+            var tournaments = await context.Tournaments
+                .OrderByDescending(t => t.Date)
+                .ThenBy(t => t.Name)
+                .Select(t => new
+                {
+                    t.Id,
+                    t.Name,
+                    FormatName = t.Format.Name,
+                    CreatorName = t.Creator.UserName,
+                    t.Date,
+                    t.ImageUrl
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            return tournaments.Select(t => new TournamentIndexViewModel
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Format = t.FormatName,
+                Creator = t.CreatorName ?? "Unknown",
+                Date = t.Date,
+                ImageUrl = t.ImageUrl,
+                Status = GetStatus(t.Date) 
+            });
         }
 
+        private static string GetStatus(DateTime startDate)
+        {
+            var now = DateTime.Now;
+
+            if (startDate > now)
+            {
+                return "Open";
+            }
+
+            if (startDate < now && startDate.AddHours(3) > now)
+            {
+                return "Running";
+            }
+
+            return "Finished";
+        }
     }
 }

@@ -26,10 +26,32 @@
             {
                 <div class="col">
                     <div class="card h-100 shadow-sm border-0">
-                        <div class="card-header @(tournament.Status == "Open" ? "bg-primary" : "bg-secondary") text-white">
-                            <div class="d-flex justify-content-between">
+
+                        @if (!string.IsNullOrEmpty(tournament.ImageUrl))
+                        {
+                            <img src="@tournament.ImageUrl" class="card-img-top" alt="@tournament.Name"
+                                 style="height: 200px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <img src="~/images/default-tournament.jpg" class="card-img-top" alt="Default Poker Image"
+                                 style="height: 200px; object-fit: cover;" asp-append-version="true">
+                        }
+
+                        @{
+                            
+                            string statusClass = tournament.Status switch
+                            {
+                                "Open" => "bg-primary",  
+                                "Running" => "bg-success", 
+                                _ => "bg-secondary"       
+                            };
+                        }
+
+                        <div class="card-header @statusClass text-white">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <span class="badge bg-light text-dark">@tournament.Format</span>
-                                <small>@tournament.Status</small>
+                                <small class="fw-bold">@tournament.Status</small>
                             </div>
                         </div>
 
@@ -42,15 +64,15 @@
                             <hr />
 
                             <div class="d-flex align-items-center">
-                                <i class="bi bi-calendar-event me-2"></i>
+                                <i class="bi bi-calendar-event me-2 text-primary"></i>
                                 <span>@tournament.Date.ToString("MMM dd, yyyy - HH:mm")</span>
                             </div>
                         </div>
 
-                        <div class="card-footer bg-white border-top-0">
-                        <a asp-action="Details" class="btn btn-outline-primary w-100">
-                            <i class="bi bi-plus-circle"></i> View Details
-                        </a>
+                        <div class="card-footer bg-white border-top-0 pb-3">
+                            <a asp-action="Details" asp-route-id="@tournament.Id" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-eye"></i> View Details
+                            </a>
                         </div>
                     </div>
                 </div>

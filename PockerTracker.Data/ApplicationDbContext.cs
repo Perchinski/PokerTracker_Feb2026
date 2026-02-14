@@ -53,6 +53,8 @@ namespace PokerTracker.Data
                 .HasForeignKey(t => t.FormatId)
                 .OnDelete(DeleteBehavior.Restrict); // Cannot delete a Format if it's used by tournaments
 
+            builder.Entity<Tournament>().HasQueryFilter(t => !t.IsDeleted);
+
             // Seed initial tournament formats
             builder.Entity<TournamentFormat>().HasData(
                 new TournamentFormat { Id = 1, Name = "Texas Hold'em - No Limit" },
