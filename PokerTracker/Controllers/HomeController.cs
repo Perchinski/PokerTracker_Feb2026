@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using PokerTracker.Models;
+using PokerTracker.ViewModels;
 
 namespace PokerTracker.Controllers
 {

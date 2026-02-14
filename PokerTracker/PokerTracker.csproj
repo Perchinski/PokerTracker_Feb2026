@@ -17,4 +17,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PockerTracker.Data\PokerTracker.Data.csproj" />
+    <ProjectReference Include="..\PokerTracker.GCommon\PokerTracker.GCommon.csproj" />
+    <ProjectReference Include="..\PokerTracker.Services.Core\PokerTracker.Services.Core.csproj" />
+    <ProjectReference Include="..\PokerTracker.ViewModels\PokerTracker.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

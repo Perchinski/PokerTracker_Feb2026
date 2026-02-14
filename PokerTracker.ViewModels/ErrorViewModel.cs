@@ -1,4 +1,4 @@
-namespace PokerTracker.Models
+namespace PokerTracker.ViewModels
 {
     public class ErrorViewModel
     {

@@ -1,3 +1,14 @@
 <Solution>
-  <Project Path="PokerTracker/PokerTracker.csproj" />
+  <Folder Name="/Data/">
+    <Project Path="PockerTracker.Data/PokerTracker.Data.csproj" Id="7e79c757-2961-4183-a71d-dda8d13340ae" />
+    <Project Path="PokerTracker.Data.Models/PokerTracker.Data.Models.csproj" Id="8b67ad1b-8450-4f97-9cd7-7953ad515a55" />
+  </Folder>
+  <Folder Name="/Services/">
+    <Project Path="PokerTracker.Services.Core/PokerTracker.Services.Core.csproj" Id="9e967b81-b356-4d33-a3da-985df6fd03c5" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="PokerTracker.ViewModels/PokerTracker.ViewModels.csproj" Id="aeb0747d-e81b-41c0-af4f-2cf79588d5ec" />
+    <Project Path="PokerTracker/PokerTracker.csproj" />
+  </Folder>
+  <Project Path="PokerTracker.GCommon/PokerTracker.GCommon.csproj" Id="0ad0753b-fc51-40c4-8022-ca29ff16ca70" />
 </Solution>
