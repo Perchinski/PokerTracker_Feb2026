@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PockerTracker.Data\PokerTracker.Data.csproj" />
+    <ProjectReference Include="..\PokerTracker.ViewModels\PokerTracker.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

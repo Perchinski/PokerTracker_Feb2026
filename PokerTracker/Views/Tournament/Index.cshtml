@@ -1,0 +1,60 @@
+﻿@model IEnumerable<PokerTracker.ViewModels.Tournaments.TournamentIndexViewModel>
+
+@{
+    ViewData["Title"] = "All Tournaments";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Poker Tournaments</h1>
+        <a asp-action="Add" class="btn btn-success btn-lg">
+            <i class="bi bi-plus-circle"></i> Create New
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <h4>No tournaments found!</h4>
+            <p>Be the first to create one and start the game.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var tournament in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-header @(tournament.Status == "Open" ? "bg-primary" : "bg-secondary") text-white">
+                            <div class="d-flex justify-content-between">
+                                <span class="badge bg-light text-dark">@tournament.Format</span>
+                                <small>@tournament.Status</small>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">@tournament.Name</h5>
+                            <p class="card-text text-muted small">
+                                Organized by: <strong>@tournament.Creator</strong>
+                            </p>
+
+                            <hr />
+
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event me-2"></i>
+                                <span>@tournament.Date.ToString("MMM dd, yyyy - HH:mm")</span>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-white border-top-0">
+                        <a asp-action="Details" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-plus-circle"></i> View Details
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

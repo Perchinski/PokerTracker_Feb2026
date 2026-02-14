@@ -9,8 +9,9 @@ namespace PokerTracker.GCommon
     public static class EntityValidation
     {
         public const int MaxTournamentNameLength = 50;
+        public const int MinTournamentNameLength = 3;
         public const int MaxTournamentDescriptionLength = 500;
         public const int MaxFormatNameLength = 50;
-
+        public const int MaxImageUrlLength = 2048;
     }
 }

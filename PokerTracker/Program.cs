@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PokerTracker.Data;
+using PokerTracker.Services.Core;
+using PokerTracker.Services.Core.Contracts;
 
 namespace PokerTracker
 {
@@ -22,6 +24,8 @@ namespace PokerTracker
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<ITournamentService, TournamentService>();
 
             var app = builder.Build();
 
