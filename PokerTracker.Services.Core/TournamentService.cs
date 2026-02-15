@@ -147,5 +147,26 @@ namespace PokerTracker.Services.Core
 
             await context.SaveChangesAsync();
         }
+
+        public async Task LeaveAsync(int tournamentId, string userId)
+        {
+            var tournament = await context.Tournaments
+                .Include(t => t.PlayersTournaments)
+                .FirstOrDefaultAsync(t => t.Id == tournamentId);
+
+            if (tournament == null)
+            {
+                return;
+            }
+
+            var playerTournament = tournament.PlayersTournaments
+                .FirstOrDefault(pt => pt.PlayerId == userId);
+
+            if (playerTournament != null)
+            {
+                tournament.PlayersTournaments.Remove(playerTournament);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

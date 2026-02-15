@@ -91,5 +91,20 @@ namespace PokerTracker.Controllers
 
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Leave(int id)
+        {
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            await tournamentService.LeaveAsync(id, userId);
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
     }
 }

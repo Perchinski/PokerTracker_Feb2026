@@ -13,7 +13,11 @@
 }
 
 <div class="container py-5">
-
+    <div class="mb-3">
+        <a asp-controller="Tournament" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to All Tournaments
+        </a>
+    </div>
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-lg overflow-hidden">
@@ -120,9 +124,18 @@
                 <div class="card-body text-center p-4">
                     @if (Model.IsJoined)
                     {
-                        <div class="alert alert-success mb-0 fw-bold">
+                        <div class="alert alert-success mb-3 fw-bold">
                             <i class="bi bi-check-circle-fill me-2"></i> You are registered!
                         </div>
+
+                        @if (Model.Status == "Open")
+                        {
+                            <form asp-controller="Tournament" asp-action="Leave" asp-route-id="@Model.Id" method="post">
+                                <button type="submit" class="btn btn-outline-danger w-100 shadow-sm">
+                                    <i class="bi bi-box-arrow-left me-1"></i> Leave Tournament
+                                </button>
+                            </form>
+                        }
                     }
                     else if (Model.Status == "Open")
                     {

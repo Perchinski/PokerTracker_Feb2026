@@ -19,5 +19,7 @@ namespace PokerTracker.Services.Core.Contracts
 
         Task JoinAsync(int tournamentId, string userId);
 
+        Task LeaveAsync(int tournamentId, string userId);
+
     }
 }

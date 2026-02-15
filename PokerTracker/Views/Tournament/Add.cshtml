@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Add Tournament";
 }
-
+<div class="container py-5">
+<div class="mb-3">
+    <a asp-controller="Tournament" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Back to All Tournaments
+    </a>
+</div>
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <h2 class="text-center mb-4">Create a New Tournament</h2>
@@ -48,6 +53,7 @@
             <button type="submit" class="btn btn-primary w-100">Create Tournament</button>
         </form>
     </div>
+</div>
 </div>
 
 @section Scripts {
