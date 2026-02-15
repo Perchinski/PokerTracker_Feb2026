@@ -14,7 +14,9 @@ namespace PokerTracker.ViewModels.Tournaments
         public string Creator { get; set; } = null!; 
         public DateTime Date { get; set; }
         public string Status { get; set; } = "Open";
-
         public string? ImageUrl { get; set; }
+        public bool IsJoined { get; set; }
+        public bool IsOwner { get; set; }
+        public string? WinnerName { get; set; }
     }
 }

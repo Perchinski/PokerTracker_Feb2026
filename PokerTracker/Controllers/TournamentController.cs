@@ -55,5 +55,20 @@ namespace PokerTracker.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            string? userId = GetUserId();
+
+            var model = await tournamentService.GetDetailsAsync(id, userId);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
     }
 }

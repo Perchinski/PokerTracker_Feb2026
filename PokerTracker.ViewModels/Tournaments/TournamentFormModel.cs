@@ -18,6 +18,7 @@ namespace PokerTracker.ViewModels.Tournaments
         public string? Description { get; set; }
 
         [MaxLength(MaxImageUrlLength)]
+        [Url]
         public string? ImageUrl { get; set; }
 
         [Required]

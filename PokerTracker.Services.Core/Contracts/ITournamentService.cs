@@ -15,5 +15,7 @@ namespace PokerTracker.Services.Core.Contracts
 
         Task<IEnumerable<TournamentIndexViewModel>> GetAllTournamentsAsync();
 
+        Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId);
+
     }
 }

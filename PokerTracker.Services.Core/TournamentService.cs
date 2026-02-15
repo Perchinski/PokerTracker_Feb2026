@@ -86,5 +86,41 @@ namespace PokerTracker.Services.Core
 
             return "Finished";
         }
+
+        public async Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId)
+        {
+            var tournament = await context.Tournaments
+                .Include(t => t.Format)
+                .Include(t => t.Creator)
+                .Include(t => t.PlayersTournaments)
+                    .ThenInclude(pt => pt.Player) // Load the actual Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tournament == null)
+            {
+                return null;
+            }
+
+            return new TournamentDetailsViewModel
+            {
+                Id = tournament.Id,
+                Name = tournament.Name,
+                Description = tournament.Description ?? "No description provided.",
+                Format = tournament.Format.Name,
+                Creator = tournament.Creator.UserName ?? "Unknown",
+                Date = tournament.Date,
+                ImageUrl = tournament.ImageUrl,
+                Status = GetStatus(tournament.Date),
+                IsJoined = userId != null && tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId),
+                IsOwner = tournament.CreatorId == userId,
+                WinnerName = tournament.Winner != null ? tournament.Winner.UserName : "To be announced...",
+                Players = tournament.PlayersTournaments.Select(pt => new PlayerViewModel
+                {
+                    Id = pt.PlayerId,
+                    Name = pt.Player.UserName ?? "Unknown Player"
+                }).ToList()
+            };
+        }
     }
 }
