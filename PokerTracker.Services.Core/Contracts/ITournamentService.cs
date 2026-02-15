@@ -17,5 +17,7 @@ namespace PokerTracker.Services.Core.Contracts
 
         Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId);
 
+        Task JoinAsync(int tournamentId, string userId);
+
     }
 }

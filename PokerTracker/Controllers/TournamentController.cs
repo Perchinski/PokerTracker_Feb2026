@@ -70,5 +70,26 @@ namespace PokerTracker.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Join(int id)
+        {
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            try
+            {
+                await tournamentService.JoinAsync(id, userId);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Unable to join the tournament. " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
     }
 }

@@ -122,5 +122,30 @@ namespace PokerTracker.Services.Core
                 }).ToList()
             };
         }
+
+        public async Task JoinAsync(int tournamentId, string userId)
+        {
+            var tournament = await context.Tournaments
+                .Include(t => t.PlayersTournaments)
+                .FirstOrDefaultAsync(t => t.Id == tournamentId);
+
+            if (tournament == null)
+            {
+                throw new ArgumentException("Tournament not found");
+            }
+
+            if (tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId))
+            {
+                return;
+            }
+
+            tournament.PlayersTournaments.Add(new PlayerTournament
+            {
+                TournamentId = tournamentId,
+                PlayerId = userId
+            });
+
+            await context.SaveChangesAsync();
+        }
     }
 }
