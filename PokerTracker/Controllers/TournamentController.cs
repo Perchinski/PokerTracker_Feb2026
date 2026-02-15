@@ -106,5 +106,73 @@ namespace PokerTracker.Controllers
 
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            string? userId = GetUserId();
+
+            var model = await tournamentService.GetForEditAsync(id, userId);
+
+            if (model == null)
+            {
+                // If null, either it doesn't exist or they aren't the owner
+                return Unauthorized();
+            }
+
+            model.Formats = await tournamentService.GetFormatsAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, TournamentFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Formats = await tournamentService.GetFormatsAsync();
+                return View(model);
+            }
+
+            string? userId = GetUserId();
+
+            try
+            {
+                await tournamentService.EditAsync(id, model, userId);
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
+            }
+
+            // Redirect back to the details page to see changes
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            string? userId = GetUserId();
+
+            var tournament = await tournamentService.GetDetailsAsync(id, userId);
+
+            if (tournament == null || !tournament.IsOwner)
+            {
+                return Unauthorized();
+            }
+
+            return View(tournament);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            string userId = GetUserId();
+
+            await tournamentService.DeleteAsync(id, userId);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -168,5 +168,55 @@ namespace PokerTracker.Services.Core
                 await context.SaveChangesAsync();
             }
         }
+        public async Task<TournamentFormModel?> GetForEditAsync(int id, string userId)
+        {
+            var tournament = await context.Tournaments.FindAsync(id);
+
+            if (tournament == null || tournament.CreatorId != userId)
+            {
+                return null;
+            }
+
+            return new TournamentFormModel
+            {
+                Name = tournament.Name,
+                Description = tournament.Description,
+                Date = tournament.Date,
+                FormatId = tournament.FormatId,
+                ImageUrl = tournament.ImageUrl
+            };
+        }
+
+        public async Task EditAsync(int id, TournamentFormModel model, string userId)
+        {
+            var tournament = await context.Tournaments.FindAsync(id);
+
+            if (tournament == null || tournament.CreatorId != userId)
+            {
+                throw new InvalidOperationException("Unauthorized or Tournament not found.");
+            }
+
+            tournament.Name = model.Name;
+            tournament.Description = model.Description;
+            tournament.Date = model.Date;
+            tournament.FormatId = model.FormatId;
+            tournament.ImageUrl = model.ImageUrl;
+
+            await context.SaveChangesAsync();
+        }
+        public async Task DeleteAsync(int id, string userId)
+        {
+            var tournament = await context.Tournaments.FindAsync(id);
+
+            if (tournament == null || tournament.CreatorId != userId)
+            {
+                throw new InvalidOperationException("Unauthorized or Tournament not found.");
+            }
+
+            tournament.IsDeleted = true;
+
+            await context.SaveChangesAsync();
+        }
+
     }
 }
