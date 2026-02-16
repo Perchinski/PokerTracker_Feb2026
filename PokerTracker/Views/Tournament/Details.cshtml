@@ -46,13 +46,15 @@
                                 @if (Model.Status == "Open")
                                 {
                                     <form asp-action="Start" asp-route-id="@Model.Id" method="post" class="d-inline">
-
                                         <button type="submit" class="btn btn-success me-2 shadow-sm"
                                                 onclick="@(Model.Date > DateTime.Now ? $"return confirm('Warning: This tournament is scheduled for {Model.Date:MMM dd, HH:mm}. Are you sure you want to start it early?')" : "")">
                                             <i class="bi bi-play-fill"></i> Start Game
                                         </button>
-
                                     </form>
+
+                                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2 shadow-sm">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
                                 }
                                 else if (Model.Status == "Running")
                                 {
@@ -62,11 +64,8 @@
                                         </button>
                                     </form>
                                 }
-                                <a asp-controller="Tournament" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2 shadow-sm">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
 
-                                <a asp-controller="Tournament" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger shadow-sm">
+                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger shadow-sm">
                                     <i class="bi bi-trash-fill"></i> Delete
                                 </a>
                             }

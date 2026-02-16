@@ -224,6 +224,11 @@ namespace PokerTracker.Services.Core
                 throw new InvalidOperationException("Unauthorized or Tournament not found.");
             }
 
+            if (tournament.Status != TournamentStatus.Open)
+            {
+                throw new InvalidOperationException("Cannot edit a tournament that has already started or finished.");
+            }
+
             tournament.Name = model.Name;
             tournament.Description = model.Description;
             tournament.Date = model.Date;
