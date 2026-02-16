@@ -27,6 +27,12 @@ namespace PokerTracker.Services.Core
 
         public async Task CreateAsync(TournamentFormModel model, string userId)
         {
+            var formatExists = await context.TournamentFormats.AnyAsync(f => f.Id == model.FormatId);
+            if (!formatExists)
+            {
+                throw new ArgumentException("Invalid tournament format.");
+            }
+
             var tournament = new Tournament
             {
                 Name = model.Name,
@@ -99,10 +105,19 @@ namespace PokerTracker.Services.Core
         {
             var tournament = await context.Tournaments.FindAsync(id);
 
-            // Only Owner can start, and only if currently Open
-            if (tournament == null || tournament.CreatorId != userId || tournament.Status != TournamentStatus.Open)
+            if (tournament == null)
             {
-                return;
+                throw new InvalidOperationException("Tournament not found.");
+            }
+
+            if (tournament.CreatorId != userId)
+            {
+                throw new InvalidOperationException("Only the creator can start the tournament.");
+            }
+
+            if (tournament.Status != TournamentStatus.Open)
+            {
+                throw new InvalidOperationException("Only tournaments with status 'Open' can be started.");
             }
 
             tournament.Status = TournamentStatus.Running;
@@ -113,10 +128,19 @@ namespace PokerTracker.Services.Core
         {
             var tournament = await context.Tournaments.FindAsync(id);
 
-            // Only Owner can finish, and only if currently Running
-            if (tournament == null || tournament.CreatorId != userId || tournament.Status != TournamentStatus.Running)
+            if (tournament == null)
             {
-                return;
+                throw new InvalidOperationException("Tournament not found.");
+            }
+
+            if (tournament.CreatorId != userId)
+            {
+                throw new InvalidOperationException("Only the creator can finish the tournament.");
+            }
+
+            if (tournament.Status != TournamentStatus.Running)
+            {
+                throw new InvalidOperationException("Only tournaments with status 'Running' can be finished.");
             }
 
             tournament.Status = TournamentStatus.Finished;
@@ -187,10 +211,13 @@ namespace PokerTracker.Services.Core
             {
                 throw new ArgumentException("Tournament not found");
             }
-
+            if (tournament.Status != TournamentStatus.Open)
+            {
+                throw new InvalidOperationException("Can only join tournaments that are currently open.");
+            }
             if (tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId))
             {
-                return;
+                throw new InvalidOperationException("User is already joined to the tournament.");
             }
 
             tournament.PlayersTournaments.Add(new PlayerTournament
@@ -210,17 +237,24 @@ namespace PokerTracker.Services.Core
 
             if (tournament == null)
             {
-                return;
+                throw new InvalidOperationException("Tournament not found.");
+            }
+
+            if (tournament.Status != TournamentStatus.Open)
+            {
+                throw new InvalidOperationException("Cannot leave a tournament that has already started or finished.");
             }
 
             var playerTournament = tournament.PlayersTournaments
                 .FirstOrDefault(pt => pt.PlayerId == userId);
 
-            if (playerTournament != null)
+            if (playerTournament == null)
             {
-                tournament.PlayersTournaments.Remove(playerTournament);
-                await context.SaveChangesAsync();
+                throw new InvalidOperationException("You are not registered in this tournament.");
             }
+
+            tournament.PlayersTournaments.Remove(playerTournament);
+            await context.SaveChangesAsync();
         }
         public async Task<TournamentFormModel?> GetForEditAsync(int id, string userId)
         {
@@ -253,6 +287,12 @@ namespace PokerTracker.Services.Core
             if (tournament.Status != TournamentStatus.Open)
             {
                 throw new InvalidOperationException("Cannot edit a tournament that has already started or finished.");
+            }
+
+            var formatExists = await context.TournamentFormats.AnyAsync(f => f.Id == model.FormatId);
+            if (!formatExists)
+            {
+                throw new ArgumentException("Invalid tournament format.");
             }
 
             tournament.Name = model.Name;

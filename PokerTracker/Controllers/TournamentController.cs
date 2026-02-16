@@ -90,7 +90,14 @@ namespace PokerTracker.Controllers
         public async Task<IActionResult> Start(int id)
         {
             string? userId = GetUserId();
-            await tournamentService.StartAsync(id, userId);
+            try
+            {
+                await tournamentService.StartAsync(id, userId);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -98,7 +105,15 @@ namespace PokerTracker.Controllers
         public async Task<IActionResult> Finish(int id)
         {
             string? userId = GetUserId();
-            await tournamentService.FinishAsync(id, userId);
+            try
+            {
+                await tournamentService.FinishAsync(id, userId);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -198,11 +213,15 @@ namespace PokerTracker.Controllers
 
             var tournament = await tournamentService.GetDetailsAsync(id, userId);
 
-            if (tournament == null || !tournament.IsOwner)
+            if (tournament == null)
             {
-                return Unauthorized();
+                return NotFound();
             }
 
+            if (!tournament.IsOwner)
+            {
+                return Forbid();
+            }
             return View(tournament);
         }
 
@@ -212,7 +231,15 @@ namespace PokerTracker.Controllers
         {
             string? userId = GetUserId();
 
-            await tournamentService.DeleteAsync(id, userId);
+            try
+            {
+                await tournamentService.DeleteAsync(id, userId);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Details), new { id });
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -223,10 +250,18 @@ namespace PokerTracker.Controllers
             string? userId = GetUserId();
 
             var tournament = await tournamentService.GetDetailsAsync(id, userId);
-
-            if (tournament == null || !tournament.IsOwner || tournament.Status != "Finished")
+            if (tournament == null)
             {
-                return Unauthorized();
+                return NotFound();
+            }
+            if (!tournament.IsOwner)
+            {
+                return Forbid();
+            }
+            if (tournament.Status != "Finished")
+            {
+                TempData["ErrorMessage"] = "You cannot select a winner for a tournament that is still in progress.";
+                return RedirectToAction(nameof(Details), new { id });
             }
 
             var model = new SelectWinnerViewModel

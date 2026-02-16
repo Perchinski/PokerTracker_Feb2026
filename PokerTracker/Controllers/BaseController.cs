@@ -5,6 +5,7 @@ using System.Security.Claims;
 namespace PokerTracker.Controllers
 {
     [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class BaseController : Controller
     {
         protected string? GetUserId()

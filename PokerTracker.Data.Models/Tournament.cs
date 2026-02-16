@@ -28,6 +28,8 @@ namespace PokerTracker.Data.Models
         [MaxLength(MaxTournamentDescriptionLength)]
         public string? Description { get; set; }
 
+        [Url]
+        [MaxLength(MaxImageUrlLength)]
         public string? ImageUrl { get; set; }
 
         [Required]

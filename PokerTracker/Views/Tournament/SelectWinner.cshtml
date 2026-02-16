@@ -26,6 +26,7 @@
                 {
                     <form asp-action="SelectWinner" method="post">
                         <input type="hidden" asp-for="TournamentId" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="mb-4">
                             <label asp-for="WinnerId" class="form-label fw-bold">Select the Winner:</label>

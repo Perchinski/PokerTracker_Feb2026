@@ -24,7 +24,9 @@ namespace PokerTracker.ViewModels.Tournaments
         [Required]
         public DateTime Date { get; set; }
 
+        [Required(ErrorMessage = "Please select a format.")]
         [Display(Name = "Format")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid format.")]
         public int FormatId { get; set; }
 
         public IEnumerable<TournamentFormatViewModel> Formats { get; set; }
