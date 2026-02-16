@@ -13,7 +13,7 @@ namespace PokerTracker.Services.Core.Contracts
 
         Task CreateAsync(TournamentFormModel model, string userId);
 
-        Task<IEnumerable<TournamentIndexViewModel>> GetAllTournamentsAsync();
+        Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, string? userId);
 
         Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId);
 

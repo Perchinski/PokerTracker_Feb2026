@@ -41,34 +41,59 @@ namespace PokerTracker.Services.Core
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TournamentIndexViewModel>> GetAllTournamentsAsync()
+        public async Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, string? userId)
         {
-            var tournaments = await context.Tournaments
-                .OrderByDescending(t => t.Date)
-                .ThenBy(t => t.Name)
-                .Select(t => new
-                {
-                    t.Id,
-                    t.Name,
-                    FormatName = t.Format.Name,
-                    CreatorName = t.Creator.UserName,
-                    t.Date,
-                    t.ImageUrl,
-                    t.Status
-                })
-                .AsNoTracking()
-                .ToListAsync();
+            var query = context.Tournaments
+                .Include(t => t.Format)
+                .Include(t => t.PlayersTournaments)
+                .AsQueryable();
 
-            return tournaments.Select(t => new TournamentIndexViewModel
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                Id = t.Id,
-                Name = t.Name,
-                Format = t.FormatName,
-                Creator = t.CreatorName ?? "Unknown",
-                Date = t.Date,
-                ImageUrl = t.ImageUrl,
-                Status = t.Status.ToString()
-            });
+                var normalizedSearch = searchTerm.Trim().ToLower();
+
+                query = query.Where(t => t.Name.ToLower().Contains(normalizedSearch)
+                                      || t.Description.ToLower().Contains(normalizedSearch));
+            }
+            if (onlyJoined && !string.IsNullOrEmpty(userId))
+            {
+                query = query.Where(t => t.PlayersTournaments.Any(pt => pt.PlayerId == userId));
+            }
+            if (formatId.HasValue)
+            {
+                query = query.Where(t => t.FormatId == formatId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(status) && Enum.TryParse(typeof(TournamentStatus), status, out var statusEnum))
+            {
+                var validStatus = (TournamentStatus)statusEnum;
+                query = query.Where(t => t.Status == validStatus);
+            }
+
+            query = sortOrder switch
+            {
+                "date_asc" => query.OrderBy(t => t.Date),
+                "date_desc" => query.OrderByDescending(t => t.Date),
+                "name_asc" => query.OrderBy(t => t.Name),
+                "status" => query.OrderBy(t => t.Status).ThenBy(t => t.Date), 
+                _ => query.OrderBy(t => t.Status).ThenBy(t => t.Date)
+            };
+
+            return await query
+                .Select(t => new TournamentIndexViewModel
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Date = t.Date,
+                    Format = t.Format.Name,
+                    Status = t.Status.ToString(),
+                    PlayersCount = t.PlayersTournaments.Count,
+                    ImageUrl = t.ImageUrl,
+                    Creator = t.Creator.UserName ?? "Unknown",
+                    IsJoined = userId != null && t.PlayersTournaments.Any(pt => pt.PlayerId == userId),
+                    IsOwner = t.CreatorId == userId,
+                })
+                .ToListAsync();
         }
         public async Task StartAsync(int id, string userId)
         {

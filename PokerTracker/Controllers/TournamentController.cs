@@ -13,10 +13,25 @@ namespace PokerTracker.Controllers
     {
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchTerm, int? formatId, string? status, bool onlyJoined, string sortOrder = "status")
         {
-            var tournaments = await tournamentService.GetAllTournamentsAsync();
-            return View(tournaments);
+            string? userId = GetUserId();
+            var tournaments = await tournamentService.GetAllTournamentsAsync(searchTerm, formatId, status, sortOrder, onlyJoined, userId);
+
+            var formats = await tournamentService.GetFormatsAsync();
+
+            var model = new TournamentFilterViewModel
+            {
+                Tournaments = tournaments,
+                SearchTerm = searchTerm,
+                FormatId = formatId,
+                Status = status, 
+                SortOrder = sortOrder,
+                Formats = formats,
+                OnlyJoined = onlyJoined
+            };
+
+            return View(model);
         }
 
         [HttpGet]
@@ -119,7 +134,14 @@ namespace PokerTracker.Controllers
                 return Challenge();
             }
 
-            await tournamentService.LeaveAsync(id, userId);
+            try
+            {
+                await tournamentService.LeaveAsync(id, userId);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
 
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -133,8 +155,8 @@ namespace PokerTracker.Controllers
 
             if (model == null)
             {
-                // If null, either it doesn't exist or they aren't the owner
-                return Unauthorized();
+                // If null they aren't the owner
+                return Forbid();
             }
 
             model.Formats = await tournamentService.GetFormatsAsync();
@@ -157,12 +179,15 @@ namespace PokerTracker.Controllers
             {
                 await tournamentService.EditAsync(id, model, userId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Unauthorized();
+                ModelState.AddModelError(string.Empty, "Update failed: " + ex.Message);
+
+                model.Formats = await tournamentService.GetFormatsAsync();
+
+                return View(model);
             }
 
-            // Redirect back to the details page to see changes
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -225,17 +250,23 @@ namespace PokerTracker.Controllers
 
             if (!ModelState.IsValid)
             {
-                // If validation fails, redirect back to try again
-                return RedirectToAction(nameof(SelectWinner), new { id });
+                var tournament = await tournamentService.GetDetailsAsync(id, userId);
+                model.Players = tournament.Players.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name });
+                return View(model);
             }
 
             try
             {
                 await tournamentService.SetWinnerAsync(id, model.WinnerId, userId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                ModelState.AddModelError("", "Could not set winner: " + ex.Message);
+
+                var tournament = await tournamentService.GetDetailsAsync(id, userId);
+                model.Players = tournament.Players.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name });
+
+                return View(model);
             }
 
             return RedirectToAction(nameof(Details), new { id });
