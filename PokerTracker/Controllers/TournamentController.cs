@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PokerTracker.Services.Core;
 using PokerTracker.Services.Core.Contracts;
 using PokerTracker.ViewModels.Tournaments;
@@ -189,6 +190,55 @@ namespace PokerTracker.Controllers
             await tournamentService.DeleteAsync(id, userId);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SelectWinner(int id)
+        {
+            string? userId = GetUserId();
+
+            var tournament = await tournamentService.GetDetailsAsync(id, userId);
+
+            if (tournament == null || !tournament.IsOwner || tournament.Status != "Finished")
+            {
+                return Unauthorized();
+            }
+
+            var model = new SelectWinnerViewModel
+            {
+                TournamentId = tournament.Id,
+                TournamentName = tournament.Name,
+                Players = tournament.Players.Select(p => new PlayerViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                })
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SelectWinner(int id, SelectWinnerViewModel model)
+        {
+            string? userId = GetUserId();
+
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, redirect back to try again
+                return RedirectToAction(nameof(SelectWinner), new { id });
+            }
+
+            try
+            {
+                await tournamentService.SetWinnerAsync(id, model.WinnerId, userId);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

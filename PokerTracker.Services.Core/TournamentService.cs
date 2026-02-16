@@ -120,6 +120,7 @@ namespace PokerTracker.Services.Core
             var tournament = await context.Tournaments
                 .Include(t => t.Format)
                 .Include(t => t.Creator)
+                .Include(t => t.Winner)
                 .Include(t => t.PlayersTournaments)
                     .ThenInclude(pt => pt.Player) // Load the actual Users
                 .AsNoTracking()
@@ -142,7 +143,7 @@ namespace PokerTracker.Services.Core
                 Status = tournament.Status.ToString(),
                 IsJoined = userId != null && tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId),
                 IsOwner = tournament.CreatorId == userId,
-                WinnerName = tournament.Winner != null ? tournament.Winner.UserName : "To be announced...",
+                WinnerName = tournament.Winner?.UserName,
                 Players = tournament.PlayersTournaments.Select(pt => new PlayerViewModel
                 {
                     Id = pt.PlayerId,
@@ -248,6 +249,27 @@ namespace PokerTracker.Services.Core
 
             tournament.IsDeleted = true;
 
+            await context.SaveChangesAsync();
+        }
+        public async Task SetWinnerAsync(int tournamentId, string winnerId, string userId)
+        {
+            var tournament = await context.Tournaments
+                .Include(t => t.PlayersTournaments)
+                .FirstOrDefaultAsync(t => t.Id == tournamentId);
+
+            // Security check: Must exist, must be owner, must be finished
+            if (tournament == null || tournament.CreatorId != userId || tournament.Status != TournamentStatus.Finished)
+            {
+                throw new InvalidOperationException("Unauthorized or tournament is not finished.");
+            }
+
+            // Verify the selected winner actually joined this tournament
+            if (!tournament.PlayersTournaments.Any(pt => pt.PlayerId == winnerId))
+            {
+                throw new InvalidOperationException("The winner must be a registered player in this tournament.");
+            }
+
+            tournament.WinnerId = winnerId;
             await context.SaveChangesAsync();
         }
 

@@ -30,5 +30,7 @@ namespace PokerTracker.Services.Core.Contracts
         Task StartAsync(int id, string userId);
         Task FinishAsync(int id, string userId);
 
+        Task SetWinnerAsync(int tournamentId, string winnerId, string userId);
+
     }
 }

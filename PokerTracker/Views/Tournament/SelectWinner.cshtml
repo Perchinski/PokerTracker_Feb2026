@@ -1,0 +1,62 @@
+﻿@model PokerTracker.ViewModels.Tournaments.SelectWinnerViewModel
+
+@{
+    ViewData["Title"] = "Set Tournament Winner";
+}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-6">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-warning bg-gradient text-dark py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-trophy-fill me-2"></i> Crown the Champion</h4>
+            </div>
+            <div class="card-body p-4">
+                <h5 class="mb-4 text-center">Tournament: <strong>@Model.TournamentName</strong></h5>
+
+                @if (!Model.Players.Any())
+                {
+                    <div class="alert alert-warning">
+                        You cannot set a winner because no players joined this tournament!
+                    </div>
+                    <div class="text-center mt-3">
+                        <a asp-action="Details" asp-route-id="@Model.TournamentId" class="btn btn-secondary">Back to Tournament</a>
+                    </div>
+                }
+                else
+                {
+                    <form asp-action="SelectWinner" method="post">
+                        <input type="hidden" asp-for="TournamentId" />
+
+                        <div class="mb-4">
+                            <label asp-for="WinnerId" class="form-label fw-bold">Select the Winner:</label>
+
+                            <select asp-for="WinnerId" class="form-select form-select-lg">
+                                <option value="">-- Choose a Player --</option>
+
+                                @foreach (var player in Model.Players)
+                                {
+                                    <option value="@player.Id">@player.Name</option>
+                                }
+
+                            </select>
+                            <span asp-validation-for="WinnerId" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold shadow-sm">
+                                Confirm Winner
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.TournamentId" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
