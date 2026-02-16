@@ -20,9 +20,15 @@ namespace PokerTracker.Services.Core.Contracts
         Task JoinAsync(int tournamentId, string userId);
 
         Task LeaveAsync(int tournamentId, string userId);
+
         Task<TournamentFormModel?> GetForEditAsync(int id, string userId);
+
         Task EditAsync(int id, TournamentFormModel model, string userId);
+
         Task DeleteAsync(int id, string userId);
+
+        Task StartAsync(int id, string userId);
+        Task FinishAsync(int id, string userId);
 
     }
 }

@@ -38,11 +38,13 @@ namespace PokerTracker.Data.Models
 
         [ForeignKey(nameof(CreatorId))]
         public virtual IdentityUser Creator { get; set; } = null!;
-        
+
         public string? WinnerId { get; set; }
 
         [ForeignKey(nameof(WinnerId))]
-        public virtual IdentityUser? Winner { get; set; } 
+        public virtual IdentityUser? Winner { get; set; }
+
+        public TournamentStatus Status { get; set; }
 
         public bool IsDeleted { get; set; } = false;
 

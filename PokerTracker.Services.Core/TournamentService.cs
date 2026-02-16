@@ -53,7 +53,8 @@ namespace PokerTracker.Services.Core
                     FormatName = t.Format.Name,
                     CreatorName = t.Creator.UserName,
                     t.Date,
-                    t.ImageUrl
+                    t.ImageUrl,
+                    t.Status
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -66,26 +67,53 @@ namespace PokerTracker.Services.Core
                 Creator = t.CreatorName ?? "Unknown",
                 Date = t.Date,
                 ImageUrl = t.ImageUrl,
-                Status = GetStatus(t.Date) 
+                Status = t.Status.ToString()
             });
         }
-
-        private static string GetStatus(DateTime startDate)
+        public async Task StartAsync(int id, string userId)
         {
-            var now = DateTime.Now;
+            var tournament = await context.Tournaments.FindAsync(id);
 
-            if (startDate > now)
+            // Only Owner can start, and only if currently Open
+            if (tournament == null || tournament.CreatorId != userId || tournament.Status != TournamentStatus.Open)
             {
-                return "Open";
+                return;
             }
 
-            if (startDate < now && startDate.AddHours(3) > now)
-            {
-                return "Running";
-            }
-
-            return "Finished";
+            tournament.Status = TournamentStatus.Running;
+            await context.SaveChangesAsync();
         }
+
+        public async Task FinishAsync(int id, string userId)
+        {
+            var tournament = await context.Tournaments.FindAsync(id);
+
+            // Only Owner can finish, and only if currently Running
+            if (tournament == null || tournament.CreatorId != userId || tournament.Status != TournamentStatus.Running)
+            {
+                return;
+            }
+
+            tournament.Status = TournamentStatus.Finished;
+            await context.SaveChangesAsync();
+        }
+
+        //private static string GetStatus(DateTime startDate)
+        //{
+        //    var now = DateTime.Now;
+
+        //    if (startDate > now)
+        //    {
+        //        return "Open";
+        //    }
+
+        //    if (startDate < now && startDate.AddHours(3) > now)
+        //    {
+        //        return "Running";
+        //    }
+
+        //    return "Finished";
+        //}
 
         public async Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId)
         {
@@ -111,7 +139,7 @@ namespace PokerTracker.Services.Core
                 Creator = tournament.Creator.UserName ?? "Unknown",
                 Date = tournament.Date,
                 ImageUrl = tournament.ImageUrl,
-                Status = GetStatus(tournament.Date),
+                Status = tournament.Status.ToString(),
                 IsJoined = userId != null && tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId),
                 IsOwner = tournament.CreatorId == userId,
                 WinnerName = tournament.Winner != null ? tournament.Winner.UserName : "To be announced...",
@@ -208,7 +236,7 @@ namespace PokerTracker.Services.Core
         {
             var tournament = await context.Tournaments.FindAsync(id);
 
-            if (tournament == null || tournament.CreatorId != userId)
+            if (tournament == null || tournament.CreatorId != userId || userId == null)
             {
                 throw new InvalidOperationException("Unauthorized or Tournament not found.");
             }

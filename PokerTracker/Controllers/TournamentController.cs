@@ -45,7 +45,7 @@ namespace PokerTracker.Controllers
 
                 await tournamentService.CreateAsync(model, userId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Tournament");
             }
             catch (Exception)
             {
@@ -68,6 +68,22 @@ namespace PokerTracker.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Start(int id)
+        {
+            string? userId = GetUserId();
+            await tournamentService.StartAsync(id, userId);
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Finish(int id)
+        {
+            string? userId = GetUserId();
+            await tournamentService.FinishAsync(id, userId);
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpPost]
@@ -168,7 +184,7 @@ namespace PokerTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            string userId = GetUserId();
+            string? userId = GetUserId();
 
             await tournamentService.DeleteAsync(id, userId);
 
