@@ -43,11 +43,13 @@ namespace PokerTracker.Data.Models
 
         public string? WinnerId { get; set; }
 
+        // Nullable — set after tournament finishes via SelectWinner
         [ForeignKey(nameof(WinnerId))]
         public virtual IdentityUser? Winner { get; set; }
 
         public TournamentStatus Status { get; set; }
 
+        // Soft delete flag — filtered globally via HasQueryFilter in DbContext
         public bool IsDeleted { get; set; } = false;
 
         public virtual ICollection<PlayerTournament> PlayersTournaments { get; set; }

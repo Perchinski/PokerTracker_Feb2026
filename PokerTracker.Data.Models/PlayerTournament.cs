@@ -2,6 +2,10 @@
 
 namespace PokerTracker.Data.Models
 {
+    /// <summary>
+    /// Many-to-many join entity between IdentityUser and Tournament.
+    /// Composite key (PlayerId, TournamentId) configured in DbContext.
+    /// </summary>
     public class PlayerTournament
     {
         public string PlayerId { get; set; }

@@ -7,13 +7,17 @@ using System.Threading.Tasks;
 
 namespace PokerTracker.Services.Core.Contracts
 {
+    /// <summary>
+    /// Core tournament operations. All state-changing methods throw on
+    /// authorization or business rule violations — callers must handle exceptions.
+    /// </summary>
     public interface ITournamentService
     {
         Task<IEnumerable<TournamentFormatViewModel>> GetFormatsAsync();
 
         Task CreateAsync(TournamentFormModel model, string userId);
 
-        Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, string? userId);
+        Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId);
 
         Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId);
 
@@ -27,6 +31,7 @@ namespace PokerTracker.Services.Core.Contracts
 
         Task DeleteAsync(int id, string userId);
 
+        // Status transitions: Open → Running → Finished
         Task StartAsync(int id, string userId);
         Task FinishAsync(int id, string userId);
 

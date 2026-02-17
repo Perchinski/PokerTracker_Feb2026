@@ -18,6 +18,7 @@ namespace PokerTracker
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            // Identity settings (password rules, lockout, etc.) are driven by appsettings.json
             builder.Services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 ConfigureIdentityOptions(options, builder.Configuration);
@@ -57,6 +58,10 @@ namespace PokerTracker
             app.Run();
         }
 
+        /// <summary>
+        /// Binds Identity options from the "IdentityOptions" section in appsettings.json
+        /// so password/lockout/sign-in rules can be changed without recompiling.
+        /// </summary>
         private static void ConfigureIdentityOptions(IdentityOptions options, ConfigurationManager configuration)
         {
             options.SignIn.RequireConfirmedAccount = configuration.GetValue<bool>("IdentityOptions:SignIn:RequireConfirmedAccount");

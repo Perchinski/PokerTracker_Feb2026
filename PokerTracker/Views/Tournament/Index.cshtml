@@ -60,6 +60,7 @@
                         <option value="name_asc">Name (A-Z)</option>
                     </select>
                 </div>
+
                     <div class="col-lg-1 col-md-2 pb-2">
                         <div class="form-check form-switch m-0">
                             <input class="form-check-input shadow-none" type="checkbox" asp-for="OnlyJoined" id="joinedCheck">
@@ -68,6 +69,15 @@
                             </label>
                         </div>
                     </div>
+
+                <div class="col-lg-1 col-md-2 pb-2">
+                    <div class="form-check form-switch m-0">
+                        <input class="form-check-input shadow-none" type="checkbox" asp-for="OnlyOwned" id="ownedCheck">
+                        <label class="form-check-label fw-bold text-secondary small" for="ownedCheck">
+                            Owned
+                        </label>
+                    </div>
+                </div>
 
                 <div class="col-lg-2 col-md-6">
                     <div class="d-flex gap-2 h-100">
@@ -131,6 +141,20 @@
                             <p class="card-text text-muted small">
                                 Organized by: <strong>@tournament.Creator</strong>
                             </p>
+                            <div class="mb-2">
+                                @if (tournament.IsOwner)
+                                {
+                                    <span class="badge bg-warning text-dark me-1">
+                                        <i class="bi bi-star-fill me-1"></i>Your Tournament
+                                    </span>
+                                }
+                                @if (tournament.IsJoined)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Joined
+                                    </span>
+                                }
+                            </div>
 
                             <hr />
 

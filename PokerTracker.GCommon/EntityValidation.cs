@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace PokerTracker.GCommon
 {
+    /// <summary>
+    /// Centralized validation constants shared between entity models and view models
+    /// to ensure consistent constraints across the data and presentation layers.
+    /// </summary>
     public static class EntityValidation
     {
         public const int MaxTournamentNameLength = 50;

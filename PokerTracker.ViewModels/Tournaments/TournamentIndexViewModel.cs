@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace PokerTracker.ViewModels.Tournaments
 {
+    /// <summary>
+    /// Base view model for tournament cards on the Index page.
+    /// Extended by TournamentDetailsViewModel for the full details view.
+    /// </summary>
     public class TournamentIndexViewModel
     {
         public int Id { get; set; }

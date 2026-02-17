@@ -27,6 +27,7 @@ namespace PokerTracker.Services.Core
 
         public async Task CreateAsync(TournamentFormModel model, string userId)
         {
+            // Validate FormatId exists to prevent FK violation
             var formatExists = await context.TournamentFormats.AnyAsync(f => f.Id == model.FormatId);
             if (!formatExists)
             {
@@ -47,7 +48,11 @@ namespace PokerTracker.Services.Core
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, string? userId)
+        /// <summary>
+        /// Returns filtered, sorted tournament list for the Index page.
+        /// Soft-deleted records are excluded via global query filter.
+        /// </summary>
+        public async Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId)
         {
             var query = context.Tournaments
                 .Include(t => t.Format)
@@ -65,6 +70,10 @@ namespace PokerTracker.Services.Core
             {
                 query = query.Where(t => t.PlayersTournaments.Any(pt => pt.PlayerId == userId));
             }
+            if (onlyOwned && !string.IsNullOrEmpty(userId))
+            {
+                query = query.Where(t => t.CreatorId == userId);
+            }
             if (formatId.HasValue)
             {
                 query = query.Where(t => t.FormatId == formatId.Value);
@@ -76,6 +85,7 @@ namespace PokerTracker.Services.Core
                 query = query.Where(t => t.Status == validStatus);
             }
 
+            // Default sort: by status (Open first), then by date
             query = sortOrder switch
             {
                 "date_asc" => query.OrderBy(t => t.Date),
@@ -101,6 +111,8 @@ namespace PokerTracker.Services.Core
                 })
                 .ToListAsync();
         }
+
+        // Status transition: Open → Running (owner only)
         public async Task StartAsync(int id, string userId)
         {
             var tournament = await context.Tournaments.FindAsync(id);
@@ -124,6 +136,7 @@ namespace PokerTracker.Services.Core
             await context.SaveChangesAsync();
         }
 
+        // Status transition: Running → Finished (owner only)
         public async Task FinishAsync(int id, string userId)
         {
             var tournament = await context.Tournaments.FindAsync(id);
@@ -201,6 +214,7 @@ namespace PokerTracker.Services.Core
             };
         }
 
+        // Only allowed when tournament is Open; prevents duplicate registrations
         public async Task JoinAsync(int tournamentId, string userId)
         {
             var tournament = await context.Tournaments
@@ -229,6 +243,7 @@ namespace PokerTracker.Services.Core
             await context.SaveChangesAsync();
         }
 
+        // Only allowed when tournament is Open; prevents leaving mid-game
         public async Task LeaveAsync(int tournamentId, string userId)
         {
             var tournament = await context.Tournaments

@@ -13,10 +13,10 @@ namespace PokerTracker.Controllers
     {
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? searchTerm, int? formatId, string? status, bool onlyJoined, string sortOrder = "status")
+        public async Task<IActionResult> Index(string? searchTerm, int? formatId, string? status, bool onlyJoined, bool onlyOwned, string sortOrder = "status")
         {
             string? userId = GetUserId();
-            var tournaments = await tournamentService.GetAllTournamentsAsync(searchTerm, formatId, status, sortOrder, onlyJoined, userId);
+            var tournaments = await tournamentService.GetAllTournamentsAsync(searchTerm, formatId, status, sortOrder, onlyJoined, onlyOwned, userId);
 
             var formats = await tournamentService.GetFormatsAsync();
 
@@ -28,7 +28,8 @@ namespace PokerTracker.Controllers
                 Status = status, 
                 SortOrder = sortOrder,
                 Formats = formats,
-                OnlyJoined = onlyJoined
+                OnlyJoined = onlyJoined,
+                OnlyOwned = onlyOwned
             };
 
             return View(model);

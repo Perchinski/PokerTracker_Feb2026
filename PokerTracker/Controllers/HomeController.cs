@@ -5,6 +5,7 @@ using PokerTracker.ViewModels;
 
 namespace PokerTracker.Controllers
 {
+    // Overrides BaseController's [Authorize] — public pages don't require login
     [AllowAnonymous]
     public class HomeController : BaseController
     {

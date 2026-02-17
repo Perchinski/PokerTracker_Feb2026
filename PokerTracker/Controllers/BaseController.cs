@@ -4,6 +4,9 @@ using System.Security.Claims;
 
 namespace PokerTracker.Controllers
 {
+    /// <summary>
+    /// Base controller — enforces authentication and CSRF protection for all derived controllers.
+    /// </summary>
     [Authorize]
     [AutoValidateAntiforgeryToken]
     public class BaseController : Controller
