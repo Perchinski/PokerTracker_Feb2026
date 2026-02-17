@@ -66,6 +66,7 @@ PokerTracker.Common/         → Constants, Enums, and Shared Validation
    Configure the Startup Projects and select PokerTracker as the startup project
 
 4. **Initialize Database (Package Manager Console)**
+
    Open the console by navigating to Tools > NuGet Package Manager > Package Manager Console.
 
    Run the following command:
@@ -79,13 +80,13 @@ PokerTracker.Common/         → Constants, Enums, and Shared Validation
    Update-Database
    ```
 
-5. **Run Application**
+6. **Run Application**
    ```bash
    dotnet run --project PokerTracker
    ```
    Or open `PokerTracker.sln` in Visual Studio and press **F5**.
 
-6. **Register an account or log in with a demo account** and start creating tournaments!
+7. **Register an account or log in with a demo account** and start creating tournaments!
    
 ---
 
