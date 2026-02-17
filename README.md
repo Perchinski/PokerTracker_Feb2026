@@ -56,6 +56,7 @@ PokerTracker.Common/         → Constants, Enums, and Shared Validation
    ```
 
 2. **Configure Connection String and select PokerTracker as your startup project**
+
    Update `PokerTracker/appsettings.Development.json` with your local SQL Server instance:
    ```json
    "ConnectionStrings": {
@@ -64,7 +65,7 @@ PokerTracker.Common/         → Constants, Enums, and Shared Validation
    ```
    Configure the Startup Projects and select PokerTracker as the startup project
 
-3. **Initialize Database (Package Manager Console)**
+4. **Initialize Database (Package Manager Console)**
    Open the console by navigating to Tools > NuGet Package Manager > Package Manager Console.
 
    Run the following command:
