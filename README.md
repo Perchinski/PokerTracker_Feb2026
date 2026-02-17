@@ -55,27 +55,36 @@ PokerTracker.Common/         → Constants, Enums, and Shared Validation
    cd PokerTracker_Feb2026
    ```
 
-2. **Configure Connection String**
-   Update `PokerTracker/appsettings.json` with your local SQL Server instance:
+2. **Configure Connection String and select PokerTracker as your startup project**
+   Update `PokerTracker/appsettings.Development.json` with your local SQL Server instance:
    ```json
    "ConnectionStrings": {
-     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PokerTracker;Trusted_Connection=True;"
+     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PokerTracker;Trusted_Connection=True;Encrypt=False"
    }
    ```
+   Configure the Startup Projects and select PokerTracker as the startup project
 
-3. **Initialize Database**
-   ```bash
-   dotnet ef database update --project PokerTracker.Data --startup-project PokerTracker
+3. **Initialize Database (Package Manager Console)**
+   Open the console by navigating to Tools > NuGet Package Manager > Package Manager Console.
+
+   Run the following command:
+   ```powershell
+   Update-Database -Project PokerTracker.Data -StartupProject PokerTracker
    ```
    This creates the database, seeds tournament formats, demo users, and sample tournaments.
 
-4. **Run Application**
+   Note: If "PokerTracker" is already set as your startup project in the Solution Explorer, and "PokerTracker.Data" is selected in the "Default project" dropdown at the top of the console, you can    simply run:
+    ```powershell
+   Update-Database
+   ```
+
+5. **Run Application**
    ```bash
    dotnet run --project PokerTracker
    ```
    Or open `PokerTracker.sln` in Visual Studio and press **F5**.
 
-5. **Register an account or log in with a demo account** and start creating tournaments!
+6. **Register an account or log in with a demo account** and start creating tournaments!
    
 ---
 
