@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PokerTracker.Data.Models;
+using PokerTracker.Data.SeedData;
+using System.Reflection.Emit;
 
 namespace PokerTracker.Data
 {
@@ -54,6 +56,7 @@ namespace PokerTracker.Data
                 .OnDelete(DeleteBehavior.Restrict); // Cannot delete a Format if it's used by tournaments
 
             builder.Entity<Tournament>().HasQueryFilter(t => !t.IsDeleted);
+            builder.Entity<PlayerTournament>().HasQueryFilter(pt => !pt.Tournament.IsDeleted);
 
             // Seed initial tournament formats
             builder.Entity<TournamentFormat>().HasData(
@@ -64,6 +67,10 @@ namespace PokerTracker.Data
                 new TournamentFormat { Id = 5, Name = "Spin & Go" },
                 new TournamentFormat { Id = 6, Name = "Bounty / Knockout" }
             );
+
+            builder.ApplyConfiguration(new IdentityUserSeedConfiguration());
+            builder.ApplyConfiguration(new TournamentSeedConfiguration());
+            builder.ApplyConfiguration(new PlayerTournamentSeedConfiguration());
         }
     }
 }
