@@ -78,6 +78,76 @@
                 </div>
             </div>
         </div>
+        <div class="container py-5">
+            <hr class="my-5 opacity-25">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <h2 class="display-5 fw-bold lh-1 mb-4">Master Your <span class="text-warning">Tournament Entry</span></h2>
+                    <p class="lead text-muted mb-4">
+                        Our platform focuses on the logistics so you can focus on the cards. Easily manage who's at the table and track the progress of every event in your circle.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-person-check-fill text-primary me-3 fs-5"></i>
+                            <span><strong>Simplified Registration:</strong> Players can join tournaments with a single click, making headcount management effortless.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-card-list text-primary me-3 fs-5"></i>
+                            <span><strong>Clear Formats:</strong> Support for various poker styles—always know if you're playing Texas Hold'em, Omaha, or a custom variant.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-shield-lock-fill text-primary me-3 fs-5"></i>
+                            <span><strong>Secure Hosting:</strong> Only authorized organizers can manage the player list and update tournament outcomes.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <img src="~/images/poker-chips.jpg"
+                         class="d-block mx-lg-auto img-fluid rounded-3 shadow-lg"
+                         alt="Poker chips" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <div class="text-white py-5 mt-5 shadow-lg"
+             style="background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+            url('/images/gambling-mining.jpg') center/contain no-repeat;
+            background-attachment: fixed;">
+
+            <div class="container py-5">
+                <div class="row justify-content-center text-center">
+                    <div class="col-lg-8">
+                        <h4 class="text-uppercase tracking-widest fw-bold text-warning-emphasis mb-0">Keep going</h4>
+
+                        <i class="bi bi-quote text-warning display-1"></i>
+                        <h2 class="fw-light fst-italic mb-4">
+                            "Warning: Gambling involves a severe risk of extreme wealth."
+                        </h2>
+                        <p class="text-warning fw-bold fs-5">- The PokerTracker Team</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+        <div class="bg-light py-5">
+            <div class="container text-center py-4">
+                <h3 class="fw-bold mb-3">Ready to See Who's Playing?</h3>
+                <p class="text-muted mb-4">Join the growing list of players and find your next seat at the table.</p>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-controller="Tournament" asp-action="Index" class="btn btn-dark btn-lg px-5 fw-bold shadow-sm">
+                        Browse Active Games
+                    </a>
+                    @if (!User.Identity?.IsAuthenticated ?? true)
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-dark btn-lg px-5 fw-bold">
+                            Join Now
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
