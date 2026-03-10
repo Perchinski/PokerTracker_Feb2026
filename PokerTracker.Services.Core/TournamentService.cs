@@ -1,21 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PokerTracker.Data;
 using PokerTracker.Data.Models;
+using PokerTracker.Data.Repository.Contracts;
 using PokerTracker.Services.Core.Contracts;
 using PokerTracker.ViewModels.Tournaments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokerTracker.Services.Core
 {
-    public class TournamentService(ApplicationDbContext context) : ITournamentService
+    public class TournamentService(ITournamentRepository repository) : ITournamentService
     {
         public async Task<IEnumerable<TournamentFormatViewModel>> GetFormatsAsync()
         {
-            return await context.TournamentFormats
+            return await repository.GetAllFormatsQuery()
                 .Select(f => new TournamentFormatViewModel
                 {
                     Id = f.Id,
@@ -27,9 +22,7 @@ namespace PokerTracker.Services.Core
 
         public async Task CreateAsync(TournamentFormModel model, string userId)
         {
-            // Validate FormatId exists to prevent FK violation
-            var formatExists = await context.TournamentFormats.AnyAsync(f => f.Id == model.FormatId);
-            if (!formatExists)
+            if (!await repository.FormatExistsAsync(model.FormatId))
             {
                 throw new ArgumentException("Invalid tournament format.");
             }
@@ -44,36 +37,33 @@ namespace PokerTracker.Services.Core
                 CreatorId = userId
             };
 
-            await context.Tournaments.AddAsync(tournament);
-            await context.SaveChangesAsync();
+            await repository.AddAsync(tournament);
+            await repository.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Returns filtered, sorted tournament list for the Index page.
-        /// Soft-deleted records are excluded via global query filter.
-        /// </summary>
-        public async Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId)
+        public async Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(
+            string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId)
         {
-            var query = context.Tournaments
-                .Include(t => t.Format)
-                .Include(t => t.PlayersTournaments)
-                .AsQueryable();
+            var query = repository.GetAllTournamentsQuery();
 
+            // Filtering
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var normalizedSearch = searchTerm.Trim().ToLower();
-
                 query = query.Where(t => t.Name.ToLower().Contains(normalizedSearch)
                                       || t.Description.ToLower().Contains(normalizedSearch));
             }
+
             if (onlyJoined && !string.IsNullOrEmpty(userId))
             {
                 query = query.Where(t => t.PlayersTournaments.Any(pt => pt.PlayerId == userId));
             }
+
             if (onlyOwned && !string.IsNullOrEmpty(userId))
             {
                 query = query.Where(t => t.CreatorId == userId);
             }
+
             if (formatId.HasValue)
             {
                 query = query.Where(t => t.FormatId == formatId.Value);
@@ -81,17 +71,15 @@ namespace PokerTracker.Services.Core
 
             if (!string.IsNullOrEmpty(status) && Enum.TryParse(typeof(TournamentStatus), status, out var statusEnum))
             {
-                var validStatus = (TournamentStatus)statusEnum;
-                query = query.Where(t => t.Status == validStatus);
+                query = query.Where(t => t.Status == (TournamentStatus)statusEnum);
             }
 
-            // Default sort: by status (Open first), then by date
+            // Sorting
             query = sortOrder switch
             {
                 "date_asc" => query.OrderBy(t => t.Date),
                 "date_desc" => query.OrderByDescending(t => t.Date),
                 "name_asc" => query.OrderBy(t => t.Name),
-                "status" => query.OrderBy(t => t.Status).ThenBy(t => t.Date), 
                 _ => query.OrderBy(t => t.Status).ThenBy(t => t.Date)
             };
 
@@ -112,86 +100,29 @@ namespace PokerTracker.Services.Core
                 .ToListAsync();
         }
 
-        // Status transition: Open → Running (owner only)
         public async Task StartAsync(int id, string userId)
         {
-            var tournament = await context.Tournaments.FindAsync(id);
+            var tournament = await repository.GetByIdAsync(id);
+            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Open, "Only the creator can start an open tournament.");
 
-            if (tournament == null)
-            {
-                throw new InvalidOperationException("Tournament not found.");
-            }
-
-            if (tournament.CreatorId != userId)
-            {
-                throw new InvalidOperationException("Only the creator can start the tournament.");
-            }
-
-            if (tournament.Status != TournamentStatus.Open)
-            {
-                throw new InvalidOperationException("Only tournaments with status 'Open' can be started.");
-            }
-
-            tournament.Status = TournamentStatus.Running;
-            await context.SaveChangesAsync();
+            tournament!.Status = TournamentStatus.Running;
+            await repository.SaveChangesAsync();
         }
 
-        // Status transition: Running → Finished (owner only)
         public async Task FinishAsync(int id, string userId)
         {
-            var tournament = await context.Tournaments.FindAsync(id);
+            var tournament = await repository.GetByIdAsync(id);
+            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Running, "Only the creator can finish a running tournament.");
 
-            if (tournament == null)
-            {
-                throw new InvalidOperationException("Tournament not found.");
-            }
-
-            if (tournament.CreatorId != userId)
-            {
-                throw new InvalidOperationException("Only the creator can finish the tournament.");
-            }
-
-            if (tournament.Status != TournamentStatus.Running)
-            {
-                throw new InvalidOperationException("Only tournaments with status 'Running' can be finished.");
-            }
-
-            tournament.Status = TournamentStatus.Finished;
-            await context.SaveChangesAsync();
+            tournament!.Status = TournamentStatus.Finished;
+            await repository.SaveChangesAsync();
         }
-
-        //private static string GetStatus(DateTime startDate)
-        //{
-        //    var now = DateTime.Now;
-
-        //    if (startDate > now)
-        //    {
-        //        return "Open";
-        //    }
-
-        //    if (startDate < now && startDate.AddHours(3) > now)
-        //    {
-        //        return "Running";
-        //    }
-
-        //    return "Finished";
-        //}
 
         public async Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId)
         {
-            var tournament = await context.Tournaments
-                .Include(t => t.Format)
-                .Include(t => t.Creator)
-                .Include(t => t.Winner)
-                .Include(t => t.PlayersTournaments)
-                    .ThenInclude(pt => pt.Player) // Load the actual Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Id == id);
+            var tournament = await repository.GetDetailsByIdAsync(id);
 
-            if (tournament == null)
-            {
-                return null;
-            }
+            if (tournament == null) return null;
 
             return new TournamentDetailsViewModel
             {
@@ -214,71 +145,36 @@ namespace PokerTracker.Services.Core
             };
         }
 
-        // Only allowed when tournament is Open; prevents duplicate registrations
         public async Task JoinAsync(int tournamentId, string userId)
         {
-            var tournament = await context.Tournaments
-                .Include(t => t.PlayersTournaments)
-                .FirstOrDefaultAsync(t => t.Id == tournamentId);
+            var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
 
-            if (tournament == null)
-            {
-                throw new ArgumentException("Tournament not found");
-            }
-            if (tournament.Status != TournamentStatus.Open)
-            {
-                throw new InvalidOperationException("Can only join tournaments that are currently open.");
-            }
-            if (tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId))
-            {
-                throw new InvalidOperationException("User is already joined to the tournament.");
-            }
+            if (tournament == null) throw new ArgumentException("Tournament not found");
+            if (tournament.Status != TournamentStatus.Open) throw new InvalidOperationException("Tournament is not open.");
+            if (tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId)) throw new InvalidOperationException("Already joined.");
 
-            tournament.PlayersTournaments.Add(new PlayerTournament
-            {
-                TournamentId = tournamentId,
-                PlayerId = userId
-            });
-
-            await context.SaveChangesAsync();
+            tournament.PlayersTournaments.Add(new PlayerTournament { TournamentId = tournamentId, PlayerId = userId });
+            await repository.SaveChangesAsync();
         }
 
-        // Only allowed when tournament is Open; prevents leaving mid-game
         public async Task LeaveAsync(int tournamentId, string userId)
         {
-            var tournament = await context.Tournaments
-                .Include(t => t.PlayersTournaments)
-                .FirstOrDefaultAsync(t => t.Id == tournamentId);
+            var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
 
-            if (tournament == null)
-            {
-                throw new InvalidOperationException("Tournament not found.");
-            }
+            if (tournament == null || tournament.Status != TournamentStatus.Open)
+                throw new InvalidOperationException("Cannot leave this tournament.");
 
-            if (tournament.Status != TournamentStatus.Open)
-            {
-                throw new InvalidOperationException("Cannot leave a tournament that has already started or finished.");
-            }
+            var pt = tournament.PlayersTournaments.FirstOrDefault(x => x.PlayerId == userId);
+            if (pt == null) throw new InvalidOperationException("Not registered.");
 
-            var playerTournament = tournament.PlayersTournaments
-                .FirstOrDefault(pt => pt.PlayerId == userId);
-
-            if (playerTournament == null)
-            {
-                throw new InvalidOperationException("You are not registered in this tournament.");
-            }
-
-            tournament.PlayersTournaments.Remove(playerTournament);
-            await context.SaveChangesAsync();
+            tournament.PlayersTournaments.Remove(pt);
+            await repository.SaveChangesAsync();
         }
+
         public async Task<TournamentFormModel?> GetForEditAsync(int id, string userId)
         {
-            var tournament = await context.Tournaments.FindAsync(id);
-
-            if (tournament == null || tournament.CreatorId != userId)
-            {
-                return null;
-            }
+            var tournament = await repository.GetByIdAsync(id);
+            if (tournament == null || tournament.CreatorId != userId) return null;
 
             return new TournamentFormModel
             {
@@ -292,66 +188,44 @@ namespace PokerTracker.Services.Core
 
         public async Task EditAsync(int id, TournamentFormModel model, string userId)
         {
-            var tournament = await context.Tournaments.FindAsync(id);
+            var tournament = await repository.GetByIdAsync(id);
+            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Open, "Cannot edit this tournament.");
 
-            if (tournament == null || tournament.CreatorId != userId)
-            {
-                throw new InvalidOperationException("Unauthorized or Tournament not found.");
-            }
+            if (!await repository.FormatExistsAsync(model.FormatId)) throw new ArgumentException("Invalid format.");
 
-            if (tournament.Status != TournamentStatus.Open)
-            {
-                throw new InvalidOperationException("Cannot edit a tournament that has already started or finished.");
-            }
-
-            var formatExists = await context.TournamentFormats.AnyAsync(f => f.Id == model.FormatId);
-            if (!formatExists)
-            {
-                throw new ArgumentException("Invalid tournament format.");
-            }
-
-            tournament.Name = model.Name;
+            tournament!.Name = model.Name;
             tournament.Description = model.Description;
             tournament.Date = model.Date;
             tournament.FormatId = model.FormatId;
             tournament.ImageUrl = model.ImageUrl;
 
-            await context.SaveChangesAsync();
+            await repository.SaveChangesAsync();
         }
+
         public async Task DeleteAsync(int id, string userId)
         {
-            var tournament = await context.Tournaments.FindAsync(id);
-
-            if (tournament == null || tournament.CreatorId != userId || userId == null)
-            {
-                throw new InvalidOperationException("Unauthorized or Tournament not found.");
-            }
+            var tournament = await repository.GetByIdAsync(id);
+            if (tournament == null || tournament.CreatorId != userId) throw new InvalidOperationException("Unauthorized.");
 
             tournament.IsDeleted = true;
-
-            await context.SaveChangesAsync();
+            await repository.SaveChangesAsync();
         }
+
         public async Task SetWinnerAsync(int tournamentId, string winnerId, string userId)
         {
-            var tournament = await context.Tournaments
-                .Include(t => t.PlayersTournaments)
-                .FirstOrDefaultAsync(t => t.Id == tournamentId);
+            var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
+            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Finished, "Unauthorized or tournament not finished.");
 
-            // Security check: Must exist, must be owner, must be finished
-            if (tournament == null || tournament.CreatorId != userId || tournament.Status != TournamentStatus.Finished)
-            {
-                throw new InvalidOperationException("Unauthorized or tournament is not finished.");
-            }
-
-            // Verify the selected winner actually joined this tournament
-            if (!tournament.PlayersTournaments.Any(pt => pt.PlayerId == winnerId))
-            {
-                throw new InvalidOperationException("The winner must be a registered player in this tournament.");
-            }
+            if (!tournament!.PlayersTournaments.Any(pt => pt.PlayerId == winnerId))
+                throw new InvalidOperationException("Winner must be a player.");
 
             tournament.WinnerId = winnerId;
-            await context.SaveChangesAsync();
+            await repository.SaveChangesAsync();
         }
 
+        private void ValidateOwnershipAndStatus(Tournament? t, string uid, TournamentStatus s, string msg)
+        {
+            if (t == null || t.CreatorId != uid || t.Status != s) throw new InvalidOperationException(msg);
+        }
     }
 }
