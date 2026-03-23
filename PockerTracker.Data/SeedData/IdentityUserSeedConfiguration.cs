@@ -21,6 +21,18 @@ namespace PokerTracker.Data.SeedData
         {
             var hasher = new PasswordHasher<IdentityUser>();
 
+            var adminUser = new IdentityUser
+            {
+                Id = SeedConstants.AdminOneId,
+                UserName = "admin1@pokertracker.com",
+                NormalizedUserName = "ADMIN1@POKERTRACKER.COM",
+                Email = "admin1@pokertracker.com",
+                NormalizedEmail = "ADMIN1@POKERTRACKER.COM",
+                EmailConfirmed = true,
+                SecurityStamp = "STATIC-SECURITY-STAMP-A1"
+            };
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin1!");
+
             var playerOne = new IdentityUser
             {
                 Id = SeedConstants.PlayerOneId,
@@ -45,7 +57,7 @@ namespace PokerTracker.Data.SeedData
             };
             playerTwo.PasswordHash = hasher.HashPassword(playerTwo, "Player2!");
 
-            builder.HasData(playerOne, playerTwo);
+            builder.HasData(adminUser, playerOne, playerTwo);
         }
     }
 

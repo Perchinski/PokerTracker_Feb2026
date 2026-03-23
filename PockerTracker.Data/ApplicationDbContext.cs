@@ -68,7 +68,9 @@ namespace PokerTracker.Data
                 new TournamentFormat { Id = 6, Name = "Bounty / Knockout" }
             );
 
+            builder.ApplyConfiguration(new IdentityRoleSeedConfiguration());
             builder.ApplyConfiguration(new IdentityUserSeedConfiguration());
+            builder.ApplyConfiguration(new IdentityUserRoleSeedConfiguration());
             builder.ApplyConfiguration(new TournamentSeedConfiguration());
             builder.ApplyConfiguration(new PlayerTournamentSeedConfiguration());
         }

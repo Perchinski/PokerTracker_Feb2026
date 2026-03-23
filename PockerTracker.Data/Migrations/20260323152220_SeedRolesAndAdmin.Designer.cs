@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokerTracker.Data;
 
@@ -11,9 +12,11 @@ using PokerTracker.Data;
 namespace PokerTracker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260323152220_SeedRolesAndAdmin")]
+    partial class SeedRolesAndAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,13 +160,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d11eda47-a6f6-42d1-be16-30f69d81cb95",
+                            ConcurrencyStamp = "9ee08ec3-5da9-4ec6-96a6-f65b7d4bdef7",
                             Email = "admin1@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN1@POKERTRACKER.COM",
                             NormalizedUserName = "ADMIN1@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDo/WrAGC7TXMRimGIEdOE0SoxxCt3VI5K6iCQvF+EcXvQy5n3/Fvl+JqFewO1Rymw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDktosoKBwrnc7xAjX8mTrIJDc9RsvqEWDaovMJhLTfb6MxUe1mIgI7Z4N2qh+8gmg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-A1",
                             TwoFactorEnabled = false,
@@ -173,13 +176,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "91d1780a-ce7c-4220-b37f-e0014c2ee1d8",
+                            ConcurrencyStamp = "7e41abec-c481-42ed-a5ae-a62f2a27adc8",
                             Email = "player1@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER1@POKERTRACKER.COM",
                             NormalizedUserName = "PLAYER1@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEK1MQ11FoEcChnvHNqAMMTklYwKq9G8Uxj7WOvPLzlIOFyoVZU0p3kDxSrR4uicahQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEA7FMWC+tJLIYyV+OtYZbvuJrpg+aEn0nLL8xBqBNTiHBSQF0DG8ZJSoJaUcuoHFmA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-P1",
                             TwoFactorEnabled = false,
@@ -189,13 +192,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "f6e5d4c3-b2a1-4f7e-9d8c-1a2b3c4d5e6f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "54299bc8-a36f-47e6-b7bc-3cadc84d83da",
+                            ConcurrencyStamp = "f62e1609-d3d2-4a47-9707-c08cae426a36",
                             Email = "player2@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER2@POKERTRACKER.COM",
                             NormalizedUserName = "PLAYER2@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENFJ9D4W8qRKdqDU3MDjvunUk59rbOIkBtuANSoNmL7AzLwiq3t5MUfFwm/xpnUE2w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOMgOZMWvhgsyKvNmCcKsHxWCOw8WNh0ZF+Zi9iBWcfx5lynrVZkNx17hHTNYQTKyg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-P2",
                             TwoFactorEnabled = false,
@@ -271,16 +274,6 @@ namespace PokerTracker.Data.Migrations
                         {
                             UserId = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             RoleId = "2301D884-221A-4E7D-B509-0113DCC043E1"
-                        },
-                        new
-                        {
-                            UserId = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-                            RoleId = "7D9B7113-A8F8-4035-99A7-A20DD400F6A3"
-                        },
-                        new
-                        {
-                            UserId = "f6e5d4c3-b2a1-4f7e-9d8c-1a2b3c4d5e6f",
-                            RoleId = "7D9B7113-A8F8-4035-99A7-A20DD400F6A3"
                         });
                 });
 

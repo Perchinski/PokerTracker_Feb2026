@@ -25,6 +25,7 @@ namespace PokerTracker
             {
                 ConfigureIdentityOptions(options, builder.Configuration);
             })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
@@ -53,6 +54,10 @@ namespace PokerTracker
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
