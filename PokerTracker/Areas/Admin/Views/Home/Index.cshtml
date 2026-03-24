@@ -1,7 +1,14 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
 }
 
-<p> Welcome to the Admin Home Page!</p>
+<div class="text-center mt-5">
+    <h1 class="display-4 text-warning">Administrator Dashboard</h1>
+    <p class="lead text-black">Welcome to the restricted Admin Area.</p>
+    
+    <div class="mt-4">
+        <a asp-area="Admin" asp-controller="User" asp-action="Index" class="btn btn-warning btn-lg shadow">
+            <i class="bi bi-people-fill me-2"></i> Manage Users
+        </a>
+    </div>
+</div>

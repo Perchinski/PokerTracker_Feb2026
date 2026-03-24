@@ -1,0 +1,45 @@
+﻿@model IEnumerable<PokerTracker.ViewModels.Admin.UserViewModel>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-warning"><i class="bi bi-people-fill me-2"></i>User Management</h2>
+    </div>
+
+    <div class="card bg-dark text-white border-secondary shadow">
+        <div class="card-body p-0">
+            <table class="table table-dark table-striped table-hover mb-0">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Email / Username</th>
+                        <th>Roles</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@user.Email</td>
+                            <td class="align-middle">
+                                @foreach (var role in user.Roles)
+                                {
+                                    // Make the Admin badge red and the User badge blue
+                                    var badgeColor = role == "Administrator" ? "bg-danger" : "bg-primary";
+                                    <span class="badge @badgeColor me-1">@role</span>
+                                }
+                            </td>
+                            <td class="text-end align-middle">
+                                <button class="btn btn-sm btn-outline-warning disabled">Edit Roles</button>
+                                <button class="btn btn-sm btn-outline-danger disabled">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
