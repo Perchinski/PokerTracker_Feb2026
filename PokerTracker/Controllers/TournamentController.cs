@@ -11,12 +11,13 @@ namespace PokerTracker.Controllers
     [Authorize]
     public class TournamentController(ITournamentService tournamentService) : BaseController
     {
+        private bool IsAdmin => User.IsInRole("Administrator");
 
         [HttpGet]
         public async Task<IActionResult> Index(string? searchTerm, int? formatId, string? status, bool onlyJoined, bool onlyOwned, string sortOrder = "status")
         {
             string? userId = GetUserId();
-            var tournaments = await tournamentService.GetAllTournamentsAsync(searchTerm, formatId, status, sortOrder, onlyJoined, onlyOwned, userId);
+            var tournaments = await tournamentService.GetAllTournamentsAsync(searchTerm, formatId, status, sortOrder, onlyJoined, onlyOwned, userId, IsAdmin);
 
             var formats = await tournamentService.GetFormatsAsync();
 
@@ -77,7 +78,7 @@ namespace PokerTracker.Controllers
         {
             string? userId = GetUserId();
 
-            var model = await tournamentService.GetDetailsAsync(id, userId);
+            var model = await tournamentService.GetDetailsAsync(id, userId, IsAdmin);
 
             if (model == null)
             {
@@ -93,7 +94,7 @@ namespace PokerTracker.Controllers
             string? userId = GetUserId();
             try
             {
-                await tournamentService.StartAsync(id, userId);
+                await tournamentService.StartAsync(id, userId, IsAdmin);
             }
             catch (Exception ex)
             {
@@ -108,7 +109,7 @@ namespace PokerTracker.Controllers
             string? userId = GetUserId();
             try
             {
-                await tournamentService.FinishAsync(id, userId);
+                await tournamentService.FinishAsync(id, userId, IsAdmin);
             }
             catch (Exception ex)
             {
@@ -162,12 +163,34 @@ namespace PokerTracker.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RemovePlayer(int id, string playerId)
+        {
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            try
+            {
+                await tournamentService.RemovePlayerAsync(id, playerId, userId, IsAdmin);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             string? userId = GetUserId();
 
-            var model = await tournamentService.GetForEditAsync(id, userId);
+            var model = await tournamentService.GetForEditAsync(id, userId, IsAdmin);
 
             if (model == null)
             {
@@ -193,7 +216,7 @@ namespace PokerTracker.Controllers
 
             try
             {
-                await tournamentService.EditAsync(id, model, userId);
+                await tournamentService.EditAsync(id, model, userId, IsAdmin);
             }
             catch (Exception ex)
             {
@@ -212,7 +235,7 @@ namespace PokerTracker.Controllers
         {
             string? userId = GetUserId();
 
-            var tournament = await tournamentService.GetDetailsAsync(id, userId);
+            var tournament = await tournamentService.GetDetailsAsync(id, userId, IsAdmin);
 
             if (tournament == null)
             {
@@ -234,7 +257,7 @@ namespace PokerTracker.Controllers
 
             try
             {
-                await tournamentService.DeleteAsync(id, userId);
+                await tournamentService.DeleteAsync(id, userId, IsAdmin);
             }
             catch (Exception ex)
             {
@@ -250,7 +273,7 @@ namespace PokerTracker.Controllers
         {
             string? userId = GetUserId();
 
-            var tournament = await tournamentService.GetDetailsAsync(id, userId);
+            var tournament = await tournamentService.GetDetailsAsync(id, userId, IsAdmin);
             if (tournament == null)
             {
                 return NotFound();
@@ -286,14 +309,14 @@ namespace PokerTracker.Controllers
 
             if (!ModelState.IsValid)
             {
-                var tournament = await tournamentService.GetDetailsAsync(id, userId);
-                model.Players = tournament.Players.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name });
+                var tournament = await tournamentService.GetDetailsAsync(id, userId, IsAdmin);
+                model.Players = tournament!.Players.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name });
                 return View(model);
             }
 
             try
             {
-                await tournamentService.SetWinnerAsync(id, model.WinnerId, userId);
+                await tournamentService.SetWinnerAsync(id, model.WinnerId, userId, IsAdmin);
             }
             catch (Exception ex)
             {

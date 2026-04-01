@@ -42,7 +42,7 @@ namespace PokerTracker.Services.Core
         }
 
         public async Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(
-            string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId)
+            string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId, bool isAdmin = false)
         {
             var query = repository.GetAllTournamentsQuery();
 
@@ -95,30 +95,31 @@ namespace PokerTracker.Services.Core
                     ImageUrl = t.ImageUrl,
                     Creator = t.Creator.UserName ?? "Unknown",
                     IsJoined = userId != null && t.PlayersTournaments.Any(pt => pt.PlayerId == userId),
-                    IsOwner = t.CreatorId == userId,
+                    IsOwner = isAdmin || t.CreatorId == userId,
+                    IsCreator = t.CreatorId == userId,
                 })
                 .ToListAsync();
         }
 
-        public async Task StartAsync(int id, string userId)
+        public async Task StartAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
-            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Open, "Only the creator can start an open tournament.");
+            ValidateOwnershipAndStatus(tournament, userId, isAdmin, TournamentStatus.Open, "Only the creator or an admin can start an open tournament.");
 
             tournament!.Status = TournamentStatus.Running;
             await repository.SaveChangesAsync();
         }
 
-        public async Task FinishAsync(int id, string userId)
+        public async Task FinishAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
-            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Running, "Only the creator can finish a running tournament.");
+            ValidateOwnershipAndStatus(tournament, userId, isAdmin, TournamentStatus.Running, "Only the creator or an admin can finish a running tournament.");
 
             tournament!.Status = TournamentStatus.Finished;
             await repository.SaveChangesAsync();
         }
 
-        public async Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId)
+        public async Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId, bool isAdmin = false)
         {
             var tournament = await repository.GetDetailsByIdAsync(id);
 
@@ -135,7 +136,8 @@ namespace PokerTracker.Services.Core
                 ImageUrl = tournament.ImageUrl,
                 Status = tournament.Status.ToString(),
                 IsJoined = userId != null && tournament.PlayersTournaments.Any(pt => pt.PlayerId == userId),
-                IsOwner = tournament.CreatorId == userId,
+                IsOwner = isAdmin || tournament.CreatorId == userId,
+                IsCreator = tournament.CreatorId == userId,
                 WinnerName = tournament.Winner?.UserName,
                 Players = tournament.PlayersTournaments.Select(pt => new PlayerViewModel
                 {
@@ -171,10 +173,33 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
-        public async Task<TournamentFormModel?> GetForEditAsync(int id, string userId)
+        public async Task RemovePlayerAsync(int tournamentId, string playerIdToRemove, string currentUserId, bool isAdmin = false)
+        {
+            var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
+
+            if (tournament == null) throw new InvalidOperationException("Tournament not found.");
+
+            if (!isAdmin && tournament.CreatorId != currentUserId)
+            {
+                throw new InvalidOperationException("Only the owner or an admin can remove players.");
+            }
+
+            if (tournament.Status != TournamentStatus.Open && tournament.Status != TournamentStatus.Running) 
+            {
+                throw new InvalidOperationException("Players can only be removed while the tournament is open or running.");
+            }
+
+            var pt = tournament.PlayersTournaments.FirstOrDefault(x => x.PlayerId == playerIdToRemove);
+            if (pt == null) throw new InvalidOperationException("Player is not registered.");
+
+            tournament.PlayersTournaments.Remove(pt);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<TournamentFormModel?> GetForEditAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
-            if (tournament == null || tournament.CreatorId != userId) return null;
+            if (tournament == null || (!isAdmin && tournament.CreatorId != userId)) return null;
 
             return new TournamentFormModel
             {
@@ -186,10 +211,11 @@ namespace PokerTracker.Services.Core
             };
         }
 
-        public async Task EditAsync(int id, TournamentFormModel model, string userId)
+        public async Task EditAsync(int id, TournamentFormModel model, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
-            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Open, "Cannot edit this tournament.");
+            if (tournament == null) throw new InvalidOperationException("Cannot edit this tournament.");
+            if (!isAdmin && tournament.CreatorId != userId) throw new InvalidOperationException("Cannot edit this tournament.");
 
             if (!await repository.FormatExistsAsync(model.FormatId)) throw new ArgumentException("Invalid format.");
 
@@ -202,19 +228,19 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id, string userId)
+        public async Task DeleteAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
-            if (tournament == null || tournament.CreatorId != userId) throw new InvalidOperationException("Unauthorized.");
+            if (tournament == null || (!isAdmin && tournament.CreatorId != userId)) throw new InvalidOperationException("Unauthorized.");
 
             tournament.IsDeleted = true;
             await repository.SaveChangesAsync();
         }
 
-        public async Task SetWinnerAsync(int tournamentId, string winnerId, string userId)
+        public async Task SetWinnerAsync(int tournamentId, string winnerId, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
-            ValidateOwnershipAndStatus(tournament, userId, TournamentStatus.Finished, "Unauthorized or tournament not finished.");
+            ValidateOwnershipAndStatus(tournament, userId, isAdmin, TournamentStatus.Finished, "Unauthorized or tournament not finished.");
 
             if (!tournament!.PlayersTournaments.Any(pt => pt.PlayerId == winnerId))
                 throw new InvalidOperationException("Winner must be a player.");
@@ -229,9 +255,11 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
-        private void ValidateOwnershipAndStatus(Tournament? t, string uid, TournamentStatus s, string msg)
+        private void ValidateOwnershipAndStatus(Tournament? t, string uid, bool isAdmin, TournamentStatus s, string msg)
         {
-            if (t == null || t.CreatorId != uid || t.Status != s) throw new InvalidOperationException(msg);
+            if (t == null) throw new InvalidOperationException(msg);
+            if (!isAdmin && t.CreatorId != uid) throw new InvalidOperationException(msg);
+            if (t.Status != s) throw new InvalidOperationException(msg);
         }
     }
 }

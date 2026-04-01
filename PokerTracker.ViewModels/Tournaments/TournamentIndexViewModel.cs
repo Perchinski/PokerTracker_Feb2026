@@ -21,6 +21,7 @@ namespace PokerTracker.ViewModels.Tournaments
         public string? ImageUrl { get; set; }
         public bool IsJoined { get; set; }
         public bool IsOwner { get; set; }
+        public bool IsCreator { get; set; }
         public string? WinnerName { get; set; }
         public int PlayersCount { get; set; }
     }
