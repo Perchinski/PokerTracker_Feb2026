@@ -22,5 +22,6 @@ namespace PokerTracker.Data.Repository.Contracts
         // --- Write Operations ---
         Task AddAsync(Tournament tournament);
         Task SaveChangesAsync();
+        Task RemoveUserRelatedDataAsync(string userId);
     }
 }

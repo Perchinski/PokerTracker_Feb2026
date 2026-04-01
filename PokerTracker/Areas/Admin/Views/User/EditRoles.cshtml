@@ -1,0 +1,59 @@
+﻿@model PokerTracker.ViewModels.Admin.UserRolesViewModel
+
+@{
+    ViewData["Title"] = "Edit User Roles";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark text-white border-secondary shadow">
+                <div class="card-header bg-secondary">
+                    <h4 class="mb-0">Edit Roles for @Model.Email</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="Email" />
+
+                        @for (int i = 0; i < Model.Roles.Count; i++)
+                        {
+                            var roleName = Model.Roles[i].RoleName;
+                            var isAdmin = roleName == "Administrator";
+                            var badgeColor = isAdmin ? "bg-danger" : "bg-primary";
+                            var borderColor = isAdmin ? "border-danger" : "border-primary";
+
+                            <div class="card bg-dark border @borderColor mb-3 shadow-sm">
+                                <div class="card-body py-3">
+                                    <input type="hidden" asp-for="@Model.Roles[i].RoleName" />
+            
+                                    <div class="form-check form-switch fs-5 mb-0 d-flex align-items-center">
+                                        <input asp-for="@Model.Roles[i].IsSelected" class="form-check-input flex-shrink-0" type="checkbox" role="switch" id="switch_@i" style="cursor: pointer;" />
+                
+                                        <label class="form-check-label ms-3 w-100" style="cursor: pointer;" for="switch_@i">
+                                            <span class="badge @badgeColor">@roleName</span>
+                    
+                                            @if (isAdmin)
+                                            {
+                                                <span class="d-block text-white-50 mt-1 fs-6">Grants full system access, including managing users and deleting data.</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="d-block text-white-50 mt-1 fs-6">Standard player access. Can join and host regular tournaments.</span>
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-light">Cancel</a>
+                            <button type="submit" class="btn btn-warning">Save Roles</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

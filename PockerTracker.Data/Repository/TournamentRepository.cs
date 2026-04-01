@@ -65,6 +65,40 @@ namespace PokerTracker.Data.Repository
         {
             await base.SaveChangesAsync();
         }
+
+        public async Task RemoveUserRelatedDataAsync(string userId)
+        {
+            var userRegistrations = await dbContext.PlayersTournaments
+                .IgnoreQueryFilters()
+                .Where(pt => pt.PlayerId == userId)
+                .ToListAsync();
+
+            if (userRegistrations.Any())
+            {
+                dbContext.PlayersTournaments.RemoveRange(userRegistrations);
+            }
+
+            var userTournaments = await dbContext.Tournaments
+                .IgnoreQueryFilters()
+                .Where(t => t.CreatorId == userId)
+                .ToListAsync();
+
+            if (userTournaments.Any())
+            {
+                var tournamentIds = userTournaments.Select(t => t.Id).ToList();
+                var hostedTournamentRegistrations = await dbContext.PlayersTournaments
+                    .IgnoreQueryFilters()
+                    .Where(pt => tournamentIds.Contains(pt.TournamentId))
+                    .ToListAsync();
+
+                if (hostedTournamentRegistrations.Any())
+                {
+                    dbContext.PlayersTournaments.RemoveRange(hostedTournamentRegistrations);
+                }
+
+                dbContext.Tournaments.RemoveRange(userTournaments);
+            }
+        }
     }
 }
 

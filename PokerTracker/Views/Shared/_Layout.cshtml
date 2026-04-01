@@ -25,13 +25,13 @@
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link px-3" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link px-3" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" asp-controller="Tournament" asp-action="Index">Tournaments</a>
+                            <a class="nav-link px-3" asp-area="" asp-controller="Tournament" asp-action="Index">Tournaments</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link px-3" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @if (User.IsInRole("Administrator"))
                         {

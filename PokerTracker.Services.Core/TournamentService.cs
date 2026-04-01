@@ -223,6 +223,12 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        public async Task DeleteUserRelatedDataAsync(string userId)
+        {
+            await repository.RemoveUserRelatedDataAsync(userId);
+            await repository.SaveChangesAsync();
+        }
+
         private void ValidateOwnershipAndStatus(Tournament? t, string uid, TournamentStatus s, string msg)
         {
             if (t == null || t.CreatorId != uid || t.Status != s) throw new InvalidOperationException(msg);
