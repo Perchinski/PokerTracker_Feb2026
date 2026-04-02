@@ -55,6 +55,10 @@ namespace PokerTracker.Data.Models
         public virtual ICollection<PlayerTournament> PlayersTournaments { get; set; }
         = new HashSet<PlayerTournament>();
 
+        public int? LocationId { get; set; }
+
+        [ForeignKey(nameof(LocationId))]
+        public Location? Location { get; set; }
 
     }
 }

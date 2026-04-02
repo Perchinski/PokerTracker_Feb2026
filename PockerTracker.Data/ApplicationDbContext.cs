@@ -16,6 +16,7 @@ namespace PokerTracker.Data
         public virtual DbSet<Tournament> Tournaments { get; set; } = null!;
         public virtual DbSet<TournamentFormat> TournamentFormats { get; set; } = null!;
         public virtual DbSet<PlayerTournament> PlayersTournaments { get; set; } = null!;
+        public virtual DbSet<Location> Locations { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -55,6 +56,13 @@ namespace PokerTracker.Data
                 .HasForeignKey(t => t.FormatId)
                 .OnDelete(DeleteBehavior.Restrict); // Cannot delete a Format if it's used by tournaments
 
+            builder.Entity<Tournament>()
+                .HasOne(t => t.Location)
+                .WithMany(l => l.Tournaments)
+                .HasForeignKey(t => t.LocationId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent Cascade Delete: Handled manually or soft-deleted
+
+            builder.Entity<Location>().HasQueryFilter(l => !l.IsDeleted);
             builder.Entity<Tournament>().HasQueryFilter(t => !t.IsDeleted);
             builder.Entity<PlayerTournament>().HasQueryFilter(pt => !pt.Tournament.IsDeleted);
 

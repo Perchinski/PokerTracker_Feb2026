@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokerTracker.Data;
 
@@ -11,9 +12,11 @@ using PokerTracker.Data;
 namespace PokerTracker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260402104137_AddLocationEntity")]
+    partial class AddLocationEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -336,7 +339,7 @@ namespace PokerTracker.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("PokerTracker.Data.Models.PlayerTournament", b =>
@@ -351,7 +354,7 @@ namespace PokerTracker.Data.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("PlayersTournaments", (string)null);
+                    b.ToTable("PlayersTournaments");
 
                     b.HasData(
                         new
@@ -429,7 +432,7 @@ namespace PokerTracker.Data.Migrations
 
                     b.HasIndex("WinnerId");
 
-                    b.ToTable("Tournaments", (string)null);
+                    b.ToTable("Tournaments");
 
                     b.HasData(
                         new
@@ -474,7 +477,7 @@ namespace PokerTracker.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TournamentFormats", (string)null);
+                    b.ToTable("TournamentFormats");
 
                     b.HasData(
                         new
