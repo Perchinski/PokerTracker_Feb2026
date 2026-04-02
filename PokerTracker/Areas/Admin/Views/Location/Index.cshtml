@@ -40,6 +40,7 @@
                     <tr>
                         <th>Image</th>
                         <th>Name</th>
+                        <th>Address</th>
                         <th>City</th>
                         <th>Status</th>
                         <th>Tournaments</th>
@@ -50,7 +51,7 @@
                     @if (!Model.Any())
                     {
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">No locations found. Add one to get started!</td>
+                            <td colspan="7" class="text-center py-4 text-muted">No locations found. Add one to get started!</td>
                         </tr>
                     }
                     else
@@ -69,6 +70,7 @@
                                     }
                                 </td>
                                 <td class="align-middle fw-medium">@location.Name</td>
+                                <td class="align-middle text-muted small">@location.Address</td>
                                 <td class="align-middle">@location.City</td>
                                 <td class="align-middle">
                                     @if (location.IsActive)

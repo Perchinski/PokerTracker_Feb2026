@@ -46,6 +46,18 @@
                 <span asp-validation-for="FormatId" class="text-danger"></span>
             </div>
 
+            <div class="mb-3">
+                <label asp-for="LocationId" class="form-label"></label>
+                <select asp-for="LocationId" class="form-select">
+                    <option value="">-- Select a Location --</option>
+                    @foreach (var location in Model.Locations)
+                    {
+                        <option value="@location.Id">@location.Name - @location.City</option>
+                    }
+                </select>
+                <span asp-validation-for="LocationId" class="text-danger"></span>
+            </div>
+
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-warning text-white fw-bold">Save Changes</button>
                 <a asp-action="Details" asp-route-id="@Context.Request.RouteValues["id"]" class="btn btn-outline-secondary">Cancel</a>

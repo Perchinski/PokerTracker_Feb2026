@@ -39,6 +39,7 @@ namespace PokerTracker.Data.Repository
         {
             return await dbContext!.Tournaments
                 .Include(t => t.Format)
+                .Include(t => t.Location)
                 .Include(t => t.Creator)
                 .Include(t => t.Winner)
                 .Include(t => t.PlayersTournaments)
@@ -54,6 +55,16 @@ namespace PokerTracker.Data.Repository
         public async Task<bool> FormatExistsAsync(int formatId)
         {
             return await dbContext!.TournamentFormats.AnyAsync(f => f.Id == formatId);
+        }
+
+        public IQueryable<Location> GetActiveLocationsQuery()
+        {
+            return dbContext!.Locations.Where(l => l.IsActive).AsQueryable();
+        }
+
+        public async Task<bool> LocationExistsAsync(int locationId)
+        {
+            return await dbContext!.Locations.AnyAsync(l => l.Id == locationId && l.IsActive);
         }
 
         public async Task AddAsync(Tournament tournament)

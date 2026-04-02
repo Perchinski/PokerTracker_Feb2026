@@ -19,6 +19,9 @@ namespace PokerTracker.Data.Repository.Contracts
         IQueryable<TournamentFormat> GetAllFormatsQuery();
         Task<bool> FormatExistsAsync(int formatId);
 
+        IQueryable<Location> GetActiveLocationsQuery();
+        Task<bool> LocationExistsAsync(int locationId);
+
         // --- Write Operations ---
         Task AddAsync(Tournament tournament);
         Task SaveChangesAsync();

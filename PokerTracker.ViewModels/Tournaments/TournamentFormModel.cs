@@ -33,8 +33,17 @@ namespace PokerTracker.ViewModels.Tournaments
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid format.")]
         public int FormatId { get; set; }
 
+        [Required(ErrorMessage = "Please select a location.")]
+        [Display(Name = "Location")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid location.")]
+        public int LocationId { get; set; }
+
         // Not submitted by the form — populated server-side for dropdown rendering
         public IEnumerable<TournamentFormatViewModel> Formats { get; set; }
             = new List<TournamentFormatViewModel>();
+
+        // Populated server-side for dropdown rendering
+        public IEnumerable<LocationSelectionViewModel> Locations { get; set; }
+            = new List<LocationSelectionViewModel>();
     }
 }

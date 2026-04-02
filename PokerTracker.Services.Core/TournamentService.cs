@@ -20,11 +20,29 @@ namespace PokerTracker.Services.Core
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<LocationSelectionViewModel>> GetActiveLocationsAsync()
+        {
+            return await repository.GetActiveLocationsQuery()
+                .Select(l => new LocationSelectionViewModel
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    City = l.City
+                })
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task CreateAsync(TournamentFormModel model, string userId)
         {
             if (!await repository.FormatExistsAsync(model.FormatId))
             {
                 throw new ArgumentException("Invalid tournament format.");
+            }
+
+            if (!await repository.LocationExistsAsync(model.LocationId))
+            {
+                throw new ArgumentException("Invalid location.");
             }
 
             var tournament = new Tournament
@@ -34,6 +52,7 @@ namespace PokerTracker.Services.Core
                 ImageUrl = model.ImageUrl,
                 Date = model.Date,
                 FormatId = model.FormatId,
+                LocationId = model.LocationId,
                 CreatorId = userId
             };
 
@@ -90,6 +109,7 @@ namespace PokerTracker.Services.Core
                     Name = t.Name,
                     Date = t.Date,
                     Format = t.Format.Name,
+                    LocationName = t.Location != null ? t.Location.Name : "TBD",
                     Status = t.Status.ToString(),
                     PlayersCount = t.PlayersTournaments.Count,
                     ImageUrl = t.ImageUrl,
@@ -131,6 +151,11 @@ namespace PokerTracker.Services.Core
                 Name = tournament.Name,
                 Description = tournament.Description ?? "No description provided.",
                 Format = tournament.Format.Name,
+                LocationId = tournament.LocationId,
+                LocationName = tournament.Location?.Name ?? "TBD",
+                LocationAddress = tournament.Location?.Address ?? string.Empty,
+                LocationCity = tournament.Location?.City ?? string.Empty,
+                LocationImageUrl = tournament.Location?.ImageUrl,
                 Creator = tournament.Creator.UserName ?? "Unknown",
                 Date = tournament.Date,
                 ImageUrl = tournament.ImageUrl,
@@ -207,6 +232,7 @@ namespace PokerTracker.Services.Core
                 Description = tournament.Description,
                 Date = tournament.Date,
                 FormatId = tournament.FormatId,
+                LocationId = tournament.LocationId ?? 0,
                 ImageUrl = tournament.ImageUrl
             };
         }
@@ -218,11 +244,13 @@ namespace PokerTracker.Services.Core
             if (!isAdmin && tournament.CreatorId != userId) throw new InvalidOperationException("Cannot edit this tournament.");
 
             if (!await repository.FormatExistsAsync(model.FormatId)) throw new ArgumentException("Invalid format.");
+            if (!await repository.LocationExistsAsync(model.LocationId)) throw new ArgumentException("Invalid location. (It might be closed or archived).");
 
             tournament!.Name = model.Name;
             tournament.Description = model.Description;
             tournament.Date = model.Date;
             tournament.FormatId = model.FormatId;
+            tournament.LocationId = model.LocationId;
             tournament.ImageUrl = model.ImageUrl;
 
             await repository.SaveChangesAsync();

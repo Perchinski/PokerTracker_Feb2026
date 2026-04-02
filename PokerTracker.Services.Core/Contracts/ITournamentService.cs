@@ -15,6 +15,8 @@ namespace PokerTracker.Services.Core.Contracts
     {
         Task<IEnumerable<TournamentFormatViewModel>> GetFormatsAsync();
 
+        Task<IEnumerable<LocationSelectionViewModel>> GetActiveLocationsAsync();
+
         Task CreateAsync(TournamentFormModel model, string userId);
 
         Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId, bool isAdmin = false);

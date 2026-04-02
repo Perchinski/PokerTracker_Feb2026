@@ -23,11 +23,29 @@ namespace PokerTracker.Services.Core
                     Id = l.Id,
                     Name = l.Name,
                     City = l.City,
+                    Address = l.Address,
                     ImageUrl = l.ImageUrl,
                     IsActive = l.IsActive,
                     TournamentCount = l.Tournaments.Count
                 })
                 .ToListAsync();
+        }
+
+        public async Task<LocationViewModels?> GetLocationDetailsAsync(int id)
+        {
+            var location = await repository.GetByIdAsync(id);
+            if (location == null) return null;
+
+            return new LocationViewModels
+            {
+                Id = location.Id,
+                Name = location.Name,
+                City = location.City,
+                Address = location.Address,
+                ImageUrl = location.ImageUrl,
+                IsActive = location.IsActive,
+                TournamentCount = location.Tournaments?.Count ?? 0
+            };
         }
 
         public async Task CreateLocationAsync(LocationFormViewModel model)

@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace PokerTracker.Controllers
 {
     [Authorize]
-    public class TournamentController(ITournamentService tournamentService) : BaseController
+    public class TournamentController(ITournamentService tournamentService, ILocationService locationService) : BaseController
     {
         private bool IsAdmin => User.IsInRole("Administrator");
 
@@ -41,8 +41,9 @@ namespace PokerTracker.Controllers
         {
             var model = new TournamentFormModel
             {
-                // Pre-load the formats for the dropdown
-                Formats = await tournamentService.GetFormatsAsync()
+                // Pre-load the formats and locations for the dropdown
+                Formats = await tournamentService.GetFormatsAsync(),
+                Locations = await tournamentService.GetActiveLocationsAsync()
             };
 
             return View(model);
@@ -54,6 +55,7 @@ namespace PokerTracker.Controllers
             if (!ModelState.IsValid)
             {
                 model.Formats = await tournamentService.GetFormatsAsync();
+                model.Locations = await tournamentService.GetActiveLocationsAsync();
                 return View(model);
             }
 
@@ -69,6 +71,7 @@ namespace PokerTracker.Controllers
             {
                 ModelState.AddModelError("", "Something went wrong while creating the tournament.");
                 model.Formats = await tournamentService.GetFormatsAsync();
+                model.Locations = await tournamentService.GetActiveLocationsAsync();
                 return View(model);
             }
         }
@@ -199,6 +202,7 @@ namespace PokerTracker.Controllers
             }
 
             model.Formats = await tournamentService.GetFormatsAsync();
+            model.Locations = await tournamentService.GetActiveLocationsAsync();
 
             return View(model);
         }
@@ -209,6 +213,7 @@ namespace PokerTracker.Controllers
             if (!ModelState.IsValid)
             {
                 model.Formats = await tournamentService.GetFormatsAsync();
+                model.Locations = await tournamentService.GetActiveLocationsAsync();
                 return View(model);
             }
 
@@ -223,6 +228,7 @@ namespace PokerTracker.Controllers
                 ModelState.AddModelError(string.Empty, "Update failed: " + ex.Message);
 
                 model.Formats = await tournamentService.GetFormatsAsync();
+                model.Locations = await tournamentService.GetActiveLocationsAsync();
 
                 return View(model);
             }
@@ -329,6 +335,19 @@ namespace PokerTracker.Controllers
             }
 
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LocationDetails(int locationId)
+        {
+            var location = await locationService.GetLocationDetailsAsync(locationId);
+
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            return View(location);
         }
     }
 }

@@ -10,6 +10,12 @@ namespace PokerTracker.ViewModels.Tournaments
     {
         public string Description { get; set; } = null!;
 
+        public int? LocationId { get; set; }
+        public string LocationName { get; set; } = "TBD";
+        public string LocationAddress { get; set; } = string.Empty;
+        public string LocationCity { get; set; } = string.Empty;
+        public string? LocationImageUrl { get; set; }
+
         public List<PlayerViewModel> Players { get; set; } = new();
     }
 }

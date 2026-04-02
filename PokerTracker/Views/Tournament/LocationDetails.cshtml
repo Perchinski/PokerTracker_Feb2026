@@ -1,0 +1,59 @@
+@model PokerTracker.ViewModels.Admin.Locations.LocationViewModels
+
+@{
+    ViewData["Title"] = "Location Details";
+}
+
+<div class="container py-5">
+    <div class="mb-3">
+        <a asp-controller="Tournament" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to All Tournaments
+        </a>
+    </div>
+
+    <div class="row align-items-center justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg overflow-hidden">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" class="w-100" style="height: 350px; object-fit: cover;" alt="@Model.Name">
+                }
+                else
+                {
+                    <img src="~/images/default-location.jpg" class="w-100" style="height: 350px; object-fit: cover;" alt="Default Image">
+                }
+
+                <div class="card-body p-4 text-center">
+                    <h1 class="display-5 fw-bold mb-3 text-primary">@Model.Name</h1>
+
+                    <div class="d-flex justify-content-center align-items-center mb-1">
+                        <i class="bi bi-geo-alt-fill text-danger fs-4 me-2"></i>
+                        <span class="fs-5 text-secondary">@Model.Address</span>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <i class="bi bi-building text-secondary fs-5 me-2"></i>
+                        <span class="fs-6 text-muted">@Model.City</span>
+                    </div>
+
+                    @if (!Model.IsActive)
+                    {
+                        <div class="alert alert-warning d-inline-block px-4 py-2 mt-2 shadow-sm rounded-pill fw-bold">
+                            <i class="bi bi-door-closed-fill me-1"></i> Currently Closed
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success d-inline-block px-4 py-2 mt-2 shadow-sm rounded-pill fw-bold">
+                            <i class="bi bi-door-open-fill me-1"></i> Open for Events
+                        </div>
+                    }
+
+                    <div class="mt-4 pt-3 border-top">
+                        <h5 class="text-muted mb-0">Total Tournaments Hosted Here: <span class="badge bg-dark rounded-pill fs-6 ms-2">@Model.TournamentCount</span></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
