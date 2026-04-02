@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PokerTracker.Services.Core.Contracts;
-using PokerTracker.ViewModels.Admin;
+using PokerTracker.ViewModels.Admin.Users;
 
 namespace PokerTracker.Areas.Admin.Controllers
 {

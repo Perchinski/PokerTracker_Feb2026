@@ -1,0 +1,96 @@
+@model LocationFormViewModel
+
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add New Location" : "Edit Location";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card bg-dark text-white border-secondary shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-gradient bg-warning text-dark py-3">
+                    <h3 class="mb-0 fw-bold d-flex align-items-center">
+                        <i class="bi bi-geo-alt-fill me-2 fs-4"></i> @(Model.Id == 0 ? "Add New Location" : "Edit Location")
+                    </h3>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" id="locationForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold bg-dark p-2 rounded border border-danger"></div>
+
+                        @if (Model.Id > 0)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                        }
+
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold text-warning">Location Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white">
+                                    <i class="bi bi-building"></i>
+                                </span>
+                                <input asp-for="Name" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Bellagio Casino" />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="City" class="form-label fw-semibold text-warning">City</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white">
+                                    <i class="bi bi-pin-map-fill"></i>
+                                </span>
+                                <input asp-for="City" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Las Vegas" />
+                            </div>
+                            <span asp-validation-for="City" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ImageUrl" class="form-label fw-semibold text-warning">Image URL (Optional)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white">
+                                    <i class="bi bi-image"></i>
+                                </span>
+                                <input asp-for="ImageUrl" class="form-control bg-dark text-white border-secondary" placeholder="https://example.com/location.jpg" />
+                            </div>
+                            <span asp-validation-for="ImageUrl" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Address" class="form-label fw-semibold text-warning">Full Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white">
+                                    <i class="bi bi-map"></i>
+                                </span>
+                                <input asp-for="Address" class="form-control bg-dark text-white border-secondary" placeholder="123 Main St, Casino Floor 2" />
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4 bg-secondary bg-opacity-25 p-3 rounded-3 border border-secondary shadow-sm">
+                            <div class="form-check form-switch ms-1 mt-1 fs-5 d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0 fs-4 cursor-pointer" type="checkbox" asp-for="IsActive" role="switch" id="isActiveSwitch">
+                                <label class="form-check-label text-light mb-0 cursor-pointer" for="isActiveSwitch">
+                                    <i class="bi bi-door-open-fill text-success me-1"></i> Open & Available
+                                    <small class="d-block text-muted fs-6 mt-1"><i class="bi bi-info-circle me-1"></i>Turn off if location is closed permanently</small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr class="border-secondary my-4">
+
+                        <div class="d-flex gap-3 justify-content-end">
+                            <a asp-action="Index" class="btn btn-outline-light px-4 py-2 fw-medium">Cancel</a>
+                            <button type="submit" class="btn btn-warning px-4 py-2 fw-bold text-dark shadow position-relative transition-all" id="submitBtn">
+                                <i class="bi bi-check-circle-fill me-1"></i> @(Model.Id == 0 ? "Create Location" : "Save Changes")
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

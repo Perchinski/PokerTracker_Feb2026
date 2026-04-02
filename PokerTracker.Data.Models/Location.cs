@@ -25,6 +25,10 @@ namespace PokerTracker.Data.Models
         [StringLength(MaxLocationCityLength)]
         public string City { get; set; } = null!;
 
+        [Url]
+        [StringLength(MaxImageUrlLength)]
+        public string? ImageUrl { get; set; }
+
         // true = open for new tournaments, false = closed/archived
         public bool IsActive { get; set; } = true;
 

@@ -30,8 +30,10 @@ namespace PokerTracker
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
+            builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 
             builder.Services.AddScoped<ITournamentService, TournamentService>();
+            builder.Services.AddScoped<ILocationService, LocationService>();
 
             var app = builder.Build();
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PokerTracker.ViewModels.Admin.UserViewModel>
+﻿@model IEnumerable<UserViewModel>
 
 @{
     ViewData["Title"] = "User Management";
@@ -20,6 +20,12 @@
     </div>
 }
 <div class="container mt-4">
+    <div class="mb-3">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary btn-sm fw-bold">
+            <i class="bi bi-arrow-left"></i> Back to Admin Dashboard
+        </a>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-warning"><i class="bi bi-people-fill me-2"></i>User Management</h2>
     </div>

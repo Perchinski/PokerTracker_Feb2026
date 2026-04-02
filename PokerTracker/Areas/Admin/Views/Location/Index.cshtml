@@ -1,0 +1,106 @@
+@model IEnumerable<LocationViewModels>
+
+@{
+    ViewData["Title"] = "Location Management";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary btn-sm fw-bold">
+            <i class="bi bi-arrow-left"></i> Back to Admin Dashboard
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-warning"><i class="bi bi-geo-alt-fill me-2"></i>Location Management</h2>
+        <a asp-action="Create" class="btn btn-warning shadow-sm fw-bold">
+            <i class="bi bi-plus-circle me-1"></i> Add Location
+        </a>
+    </div>
+
+    <div class="card bg-dark text-white border-secondary shadow">
+        <div class="card-body p-0">
+            <table class="table table-dark table-striped table-hover mb-0">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>Status</th>
+                        <th>Tournaments</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">No locations found. Add one to get started!</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var location in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">
+                                    @if (!string.IsNullOrEmpty(location.ImageUrl))
+                                    {
+                                        <img src="@location.ImageUrl" alt="@location.Name" class="rounded object-fit-cover shadow-sm" style="width: 48px; height: 48px;" onerror="this.onerror=null;this.src='/images/default-location.jpg';" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/default-location.jpg" alt="Default Location" class="rounded object-fit-cover shadow-sm" style="width: 48px; height: 48px;" asp-append-version="true" />
+                                    }
+                                </td>
+                                <td class="align-middle fw-medium">@location.Name</td>
+                                <td class="align-middle">@location.City</td>
+                                <td class="align-middle">
+                                    @if (location.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Closed</span>
+                                    }
+                                </td>
+                                <td class="align-middle">
+                                    <span class="badge bg-info text-dark">@location.TournamentCount</span>
+                                </td>
+                                <td class="text-end align-middle">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a asp-action="Edit" asp-route-id="@location.Id" class="btn btn-sm btn-outline-warning">
+                                            Edit
+                                        </a>
+
+                                        <form method="post" asp-action="Delete" asp-route-id="@location.Id" onsubmit="return confirm('Warning: Deleting this location will also permanently remove all @location.TournamentCount tournaments hosted here. Are you sure you want to proceed?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-﻿namespace PokerTracker.ViewModels.Admin
+﻿namespace PokerTracker.ViewModels.Admin.Users
 {
     public class UserViewModel
     {

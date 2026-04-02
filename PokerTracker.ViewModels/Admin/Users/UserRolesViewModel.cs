@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokerTracker.ViewModels.Admin
+namespace PokerTracker.ViewModels.Admin.Users
 {
     public class UserRolesViewModel
     {

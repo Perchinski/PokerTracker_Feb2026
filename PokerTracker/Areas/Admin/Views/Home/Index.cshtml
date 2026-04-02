@@ -6,9 +6,12 @@
     <h1 class="display-4 text-warning">Administrator Dashboard</h1>
     <p class="lead text-black">Welcome to the restricted Admin Area.</p>
     
-    <div class="mt-4">
+    <div class="mt-4 mb-4 d-flex justify-content-center gap-3">
         <a asp-area="Admin" asp-controller="User" asp-action="Index" class="btn btn-warning btn-lg shadow">
             <i class="bi bi-people-fill me-2"></i> Manage Users
+        </a>
+        <a asp-area="Admin" asp-controller="Location" asp-action="Index" class="btn btn-warning btn-lg shadow">
+            <i class="bi bi-geo-alt-fill me-2"></i> Manage Locations
         </a>
     </div>
 </div>

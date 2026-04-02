@@ -17,8 +17,18 @@ namespace PokerTracker.GCommon
         public const int MaxTournamentDescriptionLength = 500;
         public const int MaxFormatNameLength = 50;
         public const int MaxImageUrlLength = 2048;
+
+        public const int MinLocationNameLength = 2;
         public const int MaxLocationNameLength = 100;
+        public const int MinLocationAddressLength = 2;
         public const int MaxLocationAddressLength = 200;
+        public const int MinLocationCityLength = 2;
         public const int MaxLocationCityLength = 100;
+
+        public static class ErrorMessages
+        {
+            public const string RequiredMessage = "{0} is required.";
+            public const string StringLengthMessage = "{0} must be between {2} and {1} characters long.";
+        }
     }
 }
