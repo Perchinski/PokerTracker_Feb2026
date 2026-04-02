@@ -16,11 +16,11 @@
             <div class="card border-0 shadow-lg overflow-hidden">
                 @if (!string.IsNullOrEmpty(Model.ImageUrl))
                 {
-                    <img src="@Model.ImageUrl" class="w-100" style="height: 350px; object-fit: cover;" alt="@Model.Name">
+                    <img src="@Model.ImageUrl" class="w-100" style="height: 350px; object-fit: cover;" alt="@Model.Name" onerror="this.onerror=null;this.src='/images/default-location.jpg';">
                 }
                 else
                 {
-                    <img src="~/images/default-location.jpg" class="w-100" style="height: 350px; object-fit: cover;" alt="Default Image">
+                    <img src="~/images/default-location.jpg" class="w-100" style="height: 350px; object-fit: cover;" alt="Default Image" asp-append-version="true">
                 }
 
                 <div class="card-body p-4 text-center">

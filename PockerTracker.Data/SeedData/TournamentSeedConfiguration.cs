@@ -24,6 +24,7 @@ namespace PokerTracker.Data.SeedData
                     Date = new DateTime(2026, 3, 14, 20, 0, 0),
                     CreatorId = SeedConstants.PlayerOneId,
                     Status = TournamentStatus.Open,
+                    LocationId = 1,
                     ImageUrl = "https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=800"
                 },
                 // Finished tournament created by Player 2, won by Player 1
@@ -37,6 +38,7 @@ namespace PokerTracker.Data.SeedData
                     CreatorId = SeedConstants.PlayerTwoId,
                     WinnerId = SeedConstants.PlayerOneId,
                     Status = TournamentStatus.Finished,
+                    LocationId = 2,
                     ImageUrl = "https://images.unsplash.com/photo-1609902726285-00668009f004?w=800"
                 }
             );

@@ -79,6 +79,7 @@ namespace PokerTracker.Data
             builder.ApplyConfiguration(new IdentityRoleSeedConfiguration());
             builder.ApplyConfiguration(new IdentityUserSeedConfiguration());
             builder.ApplyConfiguration(new IdentityUserRoleSeedConfiguration());
+            builder.ApplyConfiguration(new LocationSeedConfiguration());
             builder.ApplyConfiguration(new TournamentSeedConfiguration());
             builder.ApplyConfiguration(new PlayerTournamentSeedConfiguration());
         }

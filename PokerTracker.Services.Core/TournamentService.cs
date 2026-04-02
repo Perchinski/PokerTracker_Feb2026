@@ -232,7 +232,7 @@ namespace PokerTracker.Services.Core
                 Description = tournament.Description,
                 Date = tournament.Date,
                 FormatId = tournament.FormatId,
-                LocationId = tournament.LocationId ?? 0,
+                LocationId = tournament.LocationId,
                 ImageUrl = tournament.ImageUrl
             };
         }
