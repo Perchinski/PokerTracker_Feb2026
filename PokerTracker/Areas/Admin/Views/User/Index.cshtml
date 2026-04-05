@@ -48,7 +48,7 @@
                             <td class="align-middle">
                                 @foreach (var role in user.Roles)
                                 {
-                                    var badgeColor = role == "Administrator" ? "bg-danger" : "bg-primary";
+                                    var badgeColor = role == PokerTracker.GCommon.ApplicationConstants.Roles.Administrator ? "bg-danger" : "bg-primary";
                                     <span class="badge @badgeColor me-1">@role</span>
                                 }
                             </td>

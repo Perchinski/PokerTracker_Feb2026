@@ -33,7 +33,7 @@
                         <li class="nav-item">
                             <a class="nav-link px-3" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        @if (User.IsInRole("Administrator"))
+                        @if (User.IsInRole(PokerTracker.GCommon.ApplicationConstants.Roles.Administrator))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link fw-bold" asp-area="Admin" asp-controller="Home" asp-action="Index">

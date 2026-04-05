@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokerTracker.Data.Models;
 using PokerTracker.Data.Repository.Contracts;
+using PokerTracker.GCommon;
 using PokerTracker.Services.Core.Contracts;
 using PokerTracker.ViewModels.Tournaments;
 
@@ -60,8 +61,8 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
-        public async Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(
-            string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId, bool isAdmin = false)
+        public async Task<(List<TournamentIndexViewModel> Tournaments, int TotalCount)> GetAllTournamentsAsync(
+            string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId, bool isAdmin = false, int pageNumber = 1, int pageSize = ApplicationConstants.DefaultPageSize)
         {
             var query = repository.GetAllTournamentsQuery();
 
@@ -96,13 +97,17 @@ namespace PokerTracker.Services.Core
             // Sorting
             query = sortOrder switch
             {
-                "date_asc" => query.OrderBy(t => t.Date),
-                "date_desc" => query.OrderByDescending(t => t.Date),
-                "name_asc" => query.OrderBy(t => t.Name),
+                ApplicationConstants.SortOrders.DateAscending => query.OrderBy(t => t.Date),
+                ApplicationConstants.SortOrders.DateDescending => query.OrderByDescending(t => t.Date),
+                ApplicationConstants.SortOrders.NameAscending => query.OrderBy(t => t.Name),
                 _ => query.OrderBy(t => t.Status).ThenBy(t => t.Date)
             };
 
-            return await query
+            int totalCount = await query.CountAsync();
+
+            var tournaments = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(t => new TournamentIndexViewModel
                 {
                     Id = t.Id,
@@ -119,6 +124,8 @@ namespace PokerTracker.Services.Core
                     IsCreator = t.CreatorId == userId,
                 })
                 .ToListAsync();
+
+            return (tournaments, totalCount);
         }
 
         public async Task StartAsync(int id, string userId, bool isAdmin = false)

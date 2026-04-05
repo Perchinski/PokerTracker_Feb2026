@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PokerTracker.GCommon;
 using PokerTracker.Services.Core;
 using PokerTracker.Services.Core.Contracts;
 using PokerTracker.ViewModels.Tournaments;
@@ -11,13 +12,14 @@ namespace PokerTracker.Controllers
     [Authorize]
     public class TournamentController(ITournamentService tournamentService, ILocationService locationService) : BaseController
     {
-        private bool IsAdmin => User.IsInRole("Administrator");
+        private bool IsAdmin => User.IsInRole(ApplicationConstants.Roles.Administrator);
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? searchTerm, int? formatId, string? status, bool onlyJoined, bool onlyOwned, string sortOrder = "status")
+        public async Task<IActionResult> Index(string? searchTerm, int? formatId, string? status, bool onlyJoined, bool onlyOwned, string sortOrder = ApplicationConstants.SortOrders.StatusDefault, int pageNumber = 1)
         {
+            const int pageSize = ApplicationConstants.DefaultPageSize;
             string? userId = GetUserId();
-            var tournaments = await tournamentService.GetAllTournamentsAsync(searchTerm, formatId, status, sortOrder, onlyJoined, onlyOwned, userId, IsAdmin);
+            var (tournaments, totalCount) = await tournamentService.GetAllTournamentsAsync(searchTerm, formatId, status, sortOrder, onlyJoined, onlyOwned, userId, IsAdmin, pageNumber, pageSize);
 
             var formats = await tournamentService.GetFormatsAsync();
 
@@ -30,7 +32,9 @@ namespace PokerTracker.Controllers
                 SortOrder = sortOrder,
                 Formats = formats,
                 OnlyJoined = onlyJoined,
-                OnlyOwned = onlyOwned
+                OnlyOwned = onlyOwned,
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
             };
 
             return View(model);

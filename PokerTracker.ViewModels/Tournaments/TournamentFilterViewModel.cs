@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PokerTracker.GCommon;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,12 +18,13 @@ namespace PokerTracker.ViewModels.Tournaments
         public string? SearchTerm { get; set; }
         public int? FormatId { get; set; }
         public string Status { get; set; } = null!;
-        public string SortOrder { get; set; } = "date_asc"; 
+        public string SortOrder { get; set; } = ApplicationConstants.SortOrders.DateAscending;
 
         public bool OnlyJoined { get; set; }
         public bool OnlyOwned { get; set; }
         public IEnumerable<TournamentFormatViewModel> Formats { get; set; } = new List<TournamentFormatViewModel>();
 
-
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
     }
 }

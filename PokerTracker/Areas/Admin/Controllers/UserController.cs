@@ -74,7 +74,7 @@ namespace PokerTracker.Areas.Admin.Controllers
             if (user == null) return NotFound();
 
             // Prevent the logged-in admin from accidentally removing their own admin privileges
-            if (user.Id == GetAdminUserId() && !model.Roles.Any(r => r.RoleName == "Administrator" && r.IsSelected))
+            if (user.Id == GetAdminUserId() && !model.Roles.Any(r => r.RoleName == PokerTracker.GCommon.ApplicationConstants.Roles.Administrator && r.IsSelected))
             {
                 TempData["Error"] = "You cannot remove your own Administrator role.";
                 return RedirectToAction(nameof(Index));

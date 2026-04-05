@@ -5,7 +5,7 @@ using System.Security.Claims;
 namespace PokerTracker.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = PokerTracker.GCommon.ApplicationConstants.Roles.Administrator)]
     [AutoValidateAntiforgeryToken]
     public class BaseAdminController : Controller
     {

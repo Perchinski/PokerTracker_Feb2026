@@ -128,7 +128,7 @@
                                 </div>
                                 <div>
                                     <small class="text-muted d-block">Start Date</small>
-                                    <strong>@Model.Date.ToString("dddd, MMM dd, yyyy")</strong>
+                                    <strong>@Model.Date.ToString(PokerTracker.GCommon.ApplicationConstants.Formatting.DetailsDateFormat)</strong>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                                 </div>
                                 <div>
                                     <small class="text-muted d-block">Time</small>
-                                    <strong>@Model.Date.ToString("HH:mm")</strong>
+                                    <strong>@Model.Date.ToString(PokerTracker.GCommon.ApplicationConstants.Formatting.DetailsTimeFormat)</strong>
                                 </div>
                             </div>
                         </div>

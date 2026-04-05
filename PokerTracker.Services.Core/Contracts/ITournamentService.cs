@@ -1,4 +1,5 @@
 ﻿using PokerTracker.ViewModels.Tournaments;
+using PokerTracker.GCommon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace PokerTracker.Services.Core.Contracts
 
         Task CreateAsync(TournamentFormModel model, string userId);
 
-        Task<List<TournamentIndexViewModel>> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId, bool isAdmin = false);
+        Task<(List<TournamentIndexViewModel> Tournaments, int TotalCount)> GetAllTournamentsAsync(string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId, bool isAdmin = false, int pageNumber = 1, int pageSize = ApplicationConstants.DefaultPageSize);
 
         Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId, bool isAdmin = false);
 

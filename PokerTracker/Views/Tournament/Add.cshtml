@@ -35,7 +35,7 @@
             <div class="mb-3">
                 <label asp-for="Date" class="form-label"></label>
                 <input asp-for="Date" class="form-control" type="datetime-local"
-                       value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                       value="@DateTime.Now.ToString(PokerTracker.GCommon.ApplicationConstants.Formatting.AddFormDateFormat)" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
 
