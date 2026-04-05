@@ -6,6 +6,9 @@ using PokerTracker.ViewModels.Admin.Users;
 
 namespace PokerTracker.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Administrative controller for managing registered user accounts and their associated roles.
+    /// </summary>
     public class UserController : BaseAdminController
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -25,6 +28,9 @@ namespace PokerTracker.Areas.Admin.Controllers
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Displays a list of all registered users with their assigned roles.
+        /// </summary>
         public async Task<IActionResult> Index()
         {
             var users = await userManager.Users.ToListAsync();
@@ -43,6 +49,10 @@ namespace PokerTracker.Areas.Admin.Controllers
             return View(userViewModels);
         }
 
+        /// <summary>
+        /// Displays a form allowing an admin to manage a user's assigned roles.
+        /// </summary>
+        /// <param name="id">The unique string identity of the user.</param>
         [HttpGet]
         public async Task<IActionResult> EditRoles(string id)
         {
@@ -67,6 +77,10 @@ namespace PokerTracker.Areas.Admin.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Applies the selected role changes for a given user, ensuring the admin does not remove their own access.
+        /// </summary>
+        /// <param name="model">The submitted user role data holding the changes.</param>
         [HttpPost]
         public async Task<IActionResult> EditRoles(UserRolesViewModel model)
         {
@@ -90,6 +104,10 @@ namespace PokerTracker.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Deletes a user account and purges any associated content, such as their hosted tournaments.
+        /// </summary>
+        /// <param name="id">The unique string identity of the user to be deleted.</param>
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {

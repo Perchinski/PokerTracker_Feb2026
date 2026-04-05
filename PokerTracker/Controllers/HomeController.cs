@@ -17,16 +17,27 @@ namespace PokerTracker.Controllers
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Displays the landing page for the application.
+        /// </summary>
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Displays the privacy policy statement.
+        /// </summary>
         public IActionResult Privacy()
         {
             return View();
         }
 
+        /// <summary>
+        /// Handles global error display and logging for unexpected exceptions and status codes.
+        /// </summary>
+        /// <param name="statusCode">The HTTP status code resulting in the error.</param>
+        /// <returns>A specific error view based on the HTTP status code.</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int? statusCode = null)
         {

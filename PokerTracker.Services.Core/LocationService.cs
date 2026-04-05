@@ -6,6 +6,10 @@ using PokerTracker.ViewModels.Admin.Locations;
 
 namespace PokerTracker.Services.Core
 {
+    /// <summary>
+    /// Implements operations defined by <see cref="ILocationService"/> to manage geographic or venue locations mapping to tournaments.
+    /// Handles database CRUD logic directly interacting with repositories.
+    /// </summary>
     public class LocationService : ILocationService
     {
         private readonly ILocationRepository repository;
@@ -15,6 +19,7 @@ namespace PokerTracker.Services.Core
             this.repository = repository;
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<LocationViewModels>> GetAllLocationsAsync()
         {
             return await repository.GetAllLocationsQuery()
@@ -31,6 +36,7 @@ namespace PokerTracker.Services.Core
                 .ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<LocationViewModels?> GetLocationDetailsAsync(int id)
         {
             var location = await repository.GetByIdAsync(id);
@@ -48,6 +54,7 @@ namespace PokerTracker.Services.Core
             };
         }
 
+        /// <inheritdoc/>
         public async Task CreateLocationAsync(LocationFormViewModel model)
         {
             var location = new Location

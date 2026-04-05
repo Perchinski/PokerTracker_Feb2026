@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace PokerTracker.ViewModels.Tournaments
 {
+    /// <summary>
+    /// View model used for tracking tournament metadata while a creator/admin chooses the winning participant.
+    /// </summary>
     public class SelectWinnerViewModel
     {
         public int TournamentId { get; set; }

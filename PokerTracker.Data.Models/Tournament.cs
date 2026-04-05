@@ -12,6 +12,10 @@ using static PokerTracker.GCommon.EntityValidation.Shared;
 
 namespace PokerTracker.Data.Models
 {
+    /// <summary>
+    /// Represents the primary domain entity for a Poker Tournament.
+    /// Tracks all details including location, format, timeline, participants, and status.
+    /// </summary>
     public class Tournament
     {
         [Key]
@@ -40,26 +44,43 @@ namespace PokerTracker.Data.Models
         [Required]
         public string CreatorId { get; set; } = null!;
 
+        /// <summary>
+        /// Navigation property to the User who created (hosts) the tournament.
+        /// </summary>
         [ForeignKey(nameof(CreatorId))]
         public virtual IdentityUser Creator { get; set; } = null!;
 
         public string? WinnerId { get; set; }
 
-        // Nullable — set after tournament finishes via SelectWinner
+        /// <summary>
+        /// Navigation property to the User who won the tournament. 
+        /// Nullable — only set after the tournament finishes via SelectWinner action.
+        /// </summary>
         [ForeignKey(nameof(WinnerId))]
         public virtual IdentityUser? Winner { get; set; }
 
+        /// <summary>
+        /// Represents the current lifecycle state of the tournament (e.g., Open, Running, Finished).
+        /// </summary>
         public TournamentStatus Status { get; set; }
 
-        // Soft delete flag — filtered globally via HasQueryFilter in DbContext
+        /// <summary>
+        /// Soft delete flag. When true, the tournament is hidden globally via EF Core HasQueryFilter.
+        /// </summary>
         public bool IsDeleted { get; set; } = false;
 
+        /// <summary>
+        /// Navigation property to the participants joining this tournament.
+        /// </summary>
         public virtual ICollection<PlayerTournament> PlayersTournaments { get; set; }
         = new HashSet<PlayerTournament>();
 
         [Required]
         public int LocationId { get; set; }
 
+        /// <summary>
+        /// Navigation property resolving the physical or virtual location of the tournament.
+        /// </summary>
         [ForeignKey(nameof(LocationId))]
         public Location Location { get; set; } = null!;
 

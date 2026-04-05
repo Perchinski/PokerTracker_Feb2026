@@ -4,6 +4,9 @@ using PokerTracker.ViewModels.Admin.Locations;
 
 namespace PokerTracker.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Admin controller responsible for managing locations used for tournaments.
+    /// </summary>
     public class LocationController : BaseAdminController
     {
         private readonly ILocationService locationService;
@@ -15,6 +18,9 @@ namespace PokerTracker.Areas.Admin.Controllers
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves and displays a list of all locations for administrative purposes.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -22,12 +28,19 @@ namespace PokerTracker.Areas.Admin.Controllers
             return View(locations);
         }
 
+        /// <summary>
+        /// Displays the view to create a newly tracked location.
+        /// </summary>
         [HttpGet]
         public IActionResult Create()
         {
             return View(new LocationFormViewModel());
         }
 
+        /// <summary>
+        /// Processes the creation of a new location.
+        /// </summary>
+        /// <param name="model">Data from the submitted form representing the new location.</param>
         [HttpPost]
         public async Task<IActionResult> Create(LocationFormViewModel model)
         {
@@ -50,6 +63,10 @@ namespace PokerTracker.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Displays the view to modify an existing location's properties.
+        /// </summary>
+        /// <param name="id">The unique identifier of the location to load.</param>
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -59,6 +76,11 @@ namespace PokerTracker.Areas.Admin.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Processes the updates to an existing location.
+        /// </summary>
+        /// <param name="id">The unique identifier of the location being changed.</param>
+        /// <param name="model">The values submitted to be applied to the location.</param>
         [HttpPost]
         public async Task<IActionResult> Edit(int id, LocationFormViewModel model)
         {
@@ -81,6 +103,10 @@ namespace PokerTracker.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a location and associated tournaments from the system.
+        /// </summary>
+        /// <param name="id">The unique identifier of the location to remove.</param>
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

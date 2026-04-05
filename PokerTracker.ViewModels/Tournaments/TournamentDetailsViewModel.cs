@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PokerTracker.ViewModels.Tournaments
 {
+    /// <summary>
+    /// Extended view model for presenting the full details of a tournament, including the location breakdown and participant list.
+    /// </summary>
     public class TournamentDetailsViewModel : TournamentIndexViewModel
     {
         public string Description { get; set; } = null!;

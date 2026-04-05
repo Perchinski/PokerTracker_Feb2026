@@ -7,8 +7,13 @@ using PokerTracker.ViewModels.Tournaments;
 
 namespace PokerTracker.Services.Core
 {
+    /// <summary>
+    /// Responsible for the primary business logic regarding tournament setups, active tracking, participant management, and validation. 
+    /// Inherits method contracts from <see cref="ITournamentService"/>.
+    /// </summary>
     public class TournamentService(ITournamentRepository repository) : ITournamentService
     {
+        /// <inheritdoc/>
         public async Task<IEnumerable<TournamentFormatViewModel>> GetFormatsAsync()
         {
             return await repository.GetAllFormatsQuery()
@@ -21,6 +26,7 @@ namespace PokerTracker.Services.Core
                 .ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<LocationSelectionViewModel>> GetActiveLocationsAsync()
         {
             return await repository.GetActiveLocationsQuery()
@@ -34,6 +40,7 @@ namespace PokerTracker.Services.Core
                 .ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task CreateAsync(TournamentFormModel model, string userId)
         {
             if (!await repository.FormatExistsAsync(model.FormatId))
@@ -61,6 +68,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<(List<TournamentIndexViewModel> Tournaments, int TotalCount)> GetAllTournamentsAsync(
             string? searchTerm, int? formatId, string? status, string sortOrder, bool onlyJoined, bool onlyOwned, string? userId, bool isAdmin = false, int pageNumber = 1, int pageSize = ApplicationConstants.DefaultPageSize)
         {
@@ -128,6 +136,7 @@ namespace PokerTracker.Services.Core
             return (tournaments, totalCount);
         }
 
+        /// <inheritdoc/>
         public async Task StartAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
@@ -137,6 +146,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task FinishAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
@@ -146,6 +156,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<TournamentDetailsViewModel?> GetDetailsAsync(int id, string? userId, bool isAdmin = false)
         {
             var tournament = await repository.GetDetailsByIdAsync(id);
@@ -179,6 +190,7 @@ namespace PokerTracker.Services.Core
             };
         }
 
+        /// <inheritdoc/>
         public async Task JoinAsync(int tournamentId, string userId)
         {
             var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
@@ -191,6 +203,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task LeaveAsync(int tournamentId, string userId)
         {
             var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
@@ -205,6 +218,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task RemovePlayerAsync(int tournamentId, string playerIdToRemove, string currentUserId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
@@ -228,6 +242,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<TournamentFormModel?> GetForEditAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
@@ -244,6 +259,7 @@ namespace PokerTracker.Services.Core
             };
         }
 
+        /// <inheritdoc/>
         public async Task EditAsync(int id, TournamentFormModel model, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
@@ -263,6 +279,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task DeleteAsync(int id, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdAsync(id);
@@ -272,6 +289,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task SetWinnerAsync(int tournamentId, string winnerId, string userId, bool isAdmin = false)
         {
             var tournament = await repository.GetByIdWithPlayersAsync(tournamentId);
@@ -284,6 +302,7 @@ namespace PokerTracker.Services.Core
             await repository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task DeleteUserRelatedDataAsync(string userId)
         {
             await repository.RemoveUserRelatedDataAsync(userId);

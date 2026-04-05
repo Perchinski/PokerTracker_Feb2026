@@ -6,7 +6,9 @@ using static PokerTracker.GCommon.EntityValidation.ErrorMessages;
 
 namespace PokerTracker.ViewModels.Admin.Locations
 {
-    // Used for listing locations in the table
+    /// <summary>
+    /// Serves as the primary display model for Location records in the Admin area grids/tables.
+    /// </summary>
     public class LocationViewModels
     {
         public int Id { get; set; }

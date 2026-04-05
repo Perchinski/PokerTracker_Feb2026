@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PokerTracker.ViewModels.Tournaments
 {
+    /// <summary>
+    /// Represents a user enrolled as a player in a tournament.
+    /// </summary>
     public class PlayerViewModel
     {
         public string Id { get; set; } = null!;

@@ -9,6 +9,9 @@ using static PokerTracker.GCommon.EntityValidation.TournamentFormat;
 
 namespace PokerTracker.Data.Models
 {
+    /// <summary>
+    /// Represents a valid ruleset or format for a tournament (e.g., Texas Hold'em, Omaha).
+    /// </summary>
     public class TournamentFormat
     {
         [Key]

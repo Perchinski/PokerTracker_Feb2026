@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PokerTracker.ViewModels.Tournaments
 {
+    /// <summary>
+    /// A simple representation of a Tournament Format for display in dropdowns or lists.
+    /// </summary>
     public class TournamentFormatViewModel
     {
 

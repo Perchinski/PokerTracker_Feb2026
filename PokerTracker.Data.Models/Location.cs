@@ -10,6 +10,10 @@ namespace PokerTracker.Data.Models
     using static GCommon.EntityValidation;
     using static GCommon.EntityValidation.Location;
     using static GCommon.EntityValidation.Shared;
+    
+    /// <summary>
+    /// Represents a physical or online venue where a poker tournament can be hosted.
+    /// </summary>
     public class Location
     {
         [Key]
@@ -31,12 +35,20 @@ namespace PokerTracker.Data.Models
         [StringLength(MaxImageUrlLength)]
         public string? ImageUrl { get; set; }
 
-        // true = open for new tournaments, false = closed/archived
+        /// <summary>
+        /// Determines if new tournaments can be created at this location.
+        /// True = active/open for hosting, False = closed/archived.
+        /// </summary>
         public bool IsActive { get; set; } = true;
 
+        /// <summary>
+        /// Global soft delete flag, keeps the location in the db but hides it from queries.
+        /// </summary>
         public bool IsDeleted { get; set; } = false;
 
-        // Navigation property: One Location can host MANY Tournaments
+        /// <summary>
+        /// Navigation property: One Location can host many Tournaments.
+        /// </summary>
         public ICollection<Tournament> Tournaments { get; set; } = new List<Tournament>();
     }
 }
