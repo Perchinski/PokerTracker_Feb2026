@@ -57,7 +57,7 @@ namespace PokerTracker.Controllers
                     return View("Errors/Error400");
             }
 
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View("Errors/Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         public IActionResult AccessDenied()
