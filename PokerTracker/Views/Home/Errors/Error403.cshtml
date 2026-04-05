@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "403 - Access Denied";
+}
+
+<div class="container d-flex justify-content-center align-items-center mt-5 pt-4">
+    <div class="text-center p-5 bg-dark border border-warning rounded shadow-lg" style="max-width: 650px;">
+
+        <div class="mb-2 display-3 text-warning">
+            <i class="bi bi-shield-lock-fill"></i>
+        </div>
+
+        <h1 class="display-1 fw-bold text-warning mb-0" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8); letter-spacing: 5px;">
+            403
+        </h1>
+        <h2 class="display-6 text-white fw-bold mb-4">High Rollers Only!</h2>
+
+        <hr class="border-warning opacity-75 w-75 mx-auto mb-4" />
+
+        <p class="lead text-light fs-3 mb-2 fw-semibold">
+            The Pit Boss has stopped you at the door.
+        </p>
+        <p class="text-white-50 fs-5 mb-5 px-3">
+            You don't have the right VIP chips to sit at this table. This restricted section of the casino is for Administrators only. Let's get you back to the public tables.
+        </p>
+
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-warning btn-lg px-5 py-3 fw-bold rounded-pill shadow-sm">
+            <i class="bi bi-arrow-return-left me-2"></i> Back to the Main Floor
+        </a>
+
+    </div>
+</div>

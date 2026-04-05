@@ -27,6 +27,12 @@ namespace PokerTracker
             })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Home/AccessDenied";
+            });
+
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
@@ -48,6 +54,8 @@ namespace PokerTracker
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
