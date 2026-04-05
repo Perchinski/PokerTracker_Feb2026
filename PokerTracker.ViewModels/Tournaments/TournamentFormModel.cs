@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static PokerTracker.GCommon.EntityValidation;
+using static PokerTracker.GCommon.EntityValidation.Tournament;
+using static PokerTracker.GCommon.EntityValidation.Shared;
 
 namespace PokerTracker.ViewModels.Tournaments
 {
@@ -12,13 +14,13 @@ namespace PokerTracker.ViewModels.Tournaments
     /// Shared form model for both Add and Edit tournament views.
     /// Formats collection is re-populated by the controller on validation failure.
     /// </summary>
-    public class TournamentFormModel
+    public class TournamentFormModel : IValidatableObject
     {
         [Required]
-        [StringLength(MaxTournamentNameLength, MinimumLength = MinTournamentNameLength)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength)]
         public string Name { get; set; } = null!;
 
-        [MaxLength(MaxTournamentDescriptionLength)]
+        [MaxLength(MaxDescriptionLength)]
         public string? Description { get; set; }
 
         [MaxLength(MaxImageUrlLength)]
@@ -28,14 +30,14 @@ namespace PokerTracker.ViewModels.Tournaments
         [Required]
         public DateTime Date { get; set; }
 
-        [Required(ErrorMessage = "Please select a format.")]
+        [Required(ErrorMessage = ErrorMessages.SelectFormatMessage)]
         [Display(Name = "Format")]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid format.")]
+        [Range(1, int.MaxValue, ErrorMessage = ErrorMessages.ValidFormatMessage)]
         public int FormatId { get; set; }
 
-        [Required(ErrorMessage = "Please select a location.")]
+        [Required(ErrorMessage = ErrorMessages.SelectLocationMessage)]
         [Display(Name = "Location")]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid location.")]
+        [Range(1, int.MaxValue, ErrorMessage = ErrorMessages.ValidLocationMessage)]
         public int LocationId { get; set; }
 
         // Not submitted by the form — populated server-side for dropdown rendering
@@ -45,5 +47,14 @@ namespace PokerTracker.ViewModels.Tournaments
         // Populated server-side for dropdown rendering
         public IEnumerable<LocationSelectionViewModel> Locations { get; set; }
             = new List<LocationSelectionViewModel>();
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            // Allow setting a date up to 1 day in the past because someone might have forgotten to host/record the tournament on the actual day
+            if (Date.Date < DateTime.UtcNow.Date.AddDays(-1))
+            {
+                yield return new ValidationResult(ErrorMessages.DateInPastMessage, new[] { nameof(Date) });
+            }
+        }
     }
 }

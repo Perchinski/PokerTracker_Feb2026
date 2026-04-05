@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static PokerTracker.GCommon.EntityValidation;
+using static PokerTracker.GCommon.EntityValidation.Location;
+using static PokerTracker.GCommon.EntityValidation.Shared;
 using static PokerTracker.GCommon.EntityValidation.ErrorMessages;
 
 namespace PokerTracker.ViewModels.Admin.Locations
@@ -22,16 +24,16 @@ namespace PokerTracker.ViewModels.Admin.Locations
         public int Id { get; set; }
 
         [Required(ErrorMessage = RequiredMessage)]
-        [StringLength(MaxLocationNameLength, MinimumLength = MinLocationNameLength, ErrorMessage = StringLengthMessage)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength, ErrorMessage = StringLengthMessage)]
         [Display(Name = "Location Name")]
         public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = RequiredMessage)]
-        [StringLength(MaxLocationAddressLength, MinimumLength = MinLocationAddressLength, ErrorMessage = StringLengthMessage)]
+        [StringLength(MaxAddressLength, MinimumLength = MinAddressLength, ErrorMessage = StringLengthMessage)]
         public string Address { get; set; } = string.Empty;
 
         [Required(ErrorMessage = RequiredMessage)]
-        [StringLength(MaxLocationCityLength, MinimumLength = MinLocationCityLength, ErrorMessage = StringLengthMessage)]
+        [StringLength(MaxCityLength, MinimumLength = MinCityLength, ErrorMessage = StringLengthMessage)]
         public string City { get; set; } = string.Empty;
 
         [Url(ErrorMessage = "Invalid URL format.")]

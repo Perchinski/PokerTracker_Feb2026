@@ -8,21 +8,23 @@ using System.Threading.Tasks;
 namespace PokerTracker.Data.Models
 {
     using static GCommon.EntityValidation;
+    using static GCommon.EntityValidation.Location;
+    using static GCommon.EntityValidation.Shared;
     public class Location
     {
         [Key]
         public int Id { get; set; }
 
         [Required]
-        [StringLength(MaxLocationNameLength)]
+        [StringLength(MaxNameLength)]
         public string Name { get; set; } = null!;
 
         [Required]
-        [StringLength(MaxLocationAddressLength)]
+        [StringLength(MaxAddressLength)]
         public string Address { get; set; } = null!;
 
         [Required]
-        [StringLength(MaxLocationCityLength)]
+        [StringLength(MaxCityLength)]
         public string City { get; set; } = null!;
 
         [Url]

@@ -12,7 +12,7 @@ namespace PokerTracker.ViewModels.Tournaments
         public int TournamentId { get; set; }
         public string? TournamentName { get; set; }
 
-        [Required(ErrorMessage = "Please select a winner.")]
+        [Required(ErrorMessage = PokerTracker.GCommon.EntityValidation.ErrorMessages.SelectWinnerMessage)]
         [Display(Name = "Winner")]
         public string WinnerId { get; set; } = null!;
 

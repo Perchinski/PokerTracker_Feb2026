@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static PokerTracker.GCommon.EntityValidation;
+using static PokerTracker.GCommon.EntityValidation.TournamentFormat;
 
 namespace PokerTracker.Data.Models
 {
@@ -14,7 +15,7 @@ namespace PokerTracker.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(MaxFormatNameLength)]
+        [MaxLength(MaxNameLength)]
         public string Name { get; set; } = null!;
 
         public virtual ICollection<Tournament> Tournaments { get; set; } = new HashSet<Tournament>();

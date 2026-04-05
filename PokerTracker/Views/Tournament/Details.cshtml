@@ -176,11 +176,9 @@
                     <h5>Description</h5>
                     <p class="text-secondary">@Model.Description</p>
 
-                    @if (Model.LocationName != "TBD")
-                    {
-                        <hr class="my-4">
-                        <h5>Venue Information</h5>
-                        <div class="card bg-light border-0 shadow-sm mt-3">
+                    <hr class="my-4">
+                    <h5>Venue Information</h5>
+                    <div class="card bg-light border-0 shadow-sm mt-3">
                             <div class="card-body d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center">
                                     @if (!string.IsNullOrEmpty(Model.LocationImageUrl))
@@ -204,7 +202,6 @@
                                 </div>
                             </div>
                         </div>
-                    }
                 </div>
             </div>
         </div>

@@ -266,6 +266,7 @@ namespace PokerTracker.Services.Tests
                 FormatId = 1,
                 Format = format,
                 LocationId = 1,
+                Location = new Location { Name = "Location Name" },
                 Status = TournamentStatus.Open,
                 CreatorId = "owner",
                 Creator = testUser,
@@ -780,7 +781,7 @@ namespace PokerTracker.Services.Tests
                 FormatId = 1,
                 Format = format,
                 LocationId = 1,
-                Location = null,
+                Location = new Location { Name = "Test Location", Address = "123 Test St", City = "Test City" },
                 Status = TournamentStatus.Open,
                 CreatorId = "creatorId",
                 Creator = creatorWithNullName,
@@ -800,9 +801,9 @@ namespace PokerTracker.Services.Tests
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Description, Is.EqualTo("A valid description"));
-            Assert.That(result.LocationName, Is.EqualTo("TBD"));
-            Assert.That(result.LocationAddress, Is.EqualTo(string.Empty));
-            Assert.That(result.LocationCity, Is.EqualTo(string.Empty));
+            Assert.That(result.LocationName, Is.EqualTo("Test Location"));
+            Assert.That(result.LocationAddress, Is.EqualTo("123 Test St"));
+            Assert.That(result.LocationCity, Is.EqualTo("Test City"));
             Assert.That(result.Creator, Is.EqualTo("Unknown"));
             Assert.That(result.WinnerName, Is.Null);
             Assert.That(result.Players.First().Name, Is.EqualTo("Unknown Player"));

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static PokerTracker.GCommon.EntityValidation;
+using static PokerTracker.GCommon.EntityValidation.Tournament;
+using static PokerTracker.GCommon.EntityValidation.Shared;
 
 namespace PokerTracker.Data.Models
 {
@@ -16,7 +18,7 @@ namespace PokerTracker.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(MaxTournamentNameLength)]
+        [MaxLength(MaxNameLength)]
         public string Name { get; set; } = null!;
 
         [Required]
@@ -25,7 +27,7 @@ namespace PokerTracker.Data.Models
         [ForeignKey(nameof(FormatId))]
         public virtual TournamentFormat Format { get; set; } = null!;
 
-        [MaxLength(MaxTournamentDescriptionLength)]
+        [MaxLength(MaxDescriptionLength)]
         public string? Description { get; set; }
 
         [Url]
