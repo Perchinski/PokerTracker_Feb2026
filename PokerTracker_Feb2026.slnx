@@ -8,6 +8,7 @@
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="PokerTracker.Services.Tests/PokerTracker.Services.Tests.csproj" />
+    <Project Path="PokerTracker.Web.Tests/PokerTracker.Web.Tests.csproj" />
   </Folder>
   <Folder Name="/Web/">
     <Project Path="PokerTracker.ViewModels/PokerTracker.ViewModels.csproj" Id="aeb0747d-e81b-41c0-af4f-2cf79588d5ec" />

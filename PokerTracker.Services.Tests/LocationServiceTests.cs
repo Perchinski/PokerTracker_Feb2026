@@ -183,5 +183,28 @@ namespace PokerTracker.Services.Tests
             var ex = Assert.ThrowsAsync<System.InvalidOperationException>(() => service.DeleteLocationAsync(99));
             Assert.That(ex.Message, Is.EqualTo("Location not found."));
         }
+
+        [Test]
+        public async Task GetLocationDetailsAsync_WithNullTournaments_ReturnsZero()
+        {
+            // Arrange
+            var location = new Location
+            {
+                Id = 1,
+                Name = "Casino Royale",
+                City = "Las Vegas",
+                Address = "Strip 1",
+                IsActive = true,
+                Tournaments = null
+            };
+            mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(location);
+
+            // Act
+            var result = await service.GetLocationDetailsAsync(1);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.TournamentCount, Is.EqualTo(0));
+        }
     }
 }
