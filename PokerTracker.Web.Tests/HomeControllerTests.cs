@@ -16,15 +16,17 @@ namespace PokerTracker.Web.Tests
     public class HomeControllerTests
     {
         private Mock<ILogger<HomeController>> mockLogger;
+        private Mock<PokerTracker.Services.Core.Contracts.IAnnouncementService> mockAnnouncementService;
         private HomeController controller;
 
         [SetUp]
         public void Setup()
         {
             mockLogger = new Mock<ILogger<HomeController>>();
+            mockAnnouncementService = new Mock<PokerTracker.Services.Core.Contracts.IAnnouncementService>();
             
             // Controller needs a controller context to set HttpContext
-            controller = new HomeController(mockLogger.Object)
+            controller = new HomeController(mockLogger.Object, mockAnnouncementService.Object)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -40,12 +42,14 @@ namespace PokerTracker.Web.Tests
         }
 
         [Test]
-        public void Index_ReturnsViewResult()
+        public async Task Index_ReturnsViewResult()
         {
             // Arrange (done in Setup)
+            mockAnnouncementService.Setup(s => s.GetAllAsync(false))
+                .ReturnsAsync(new List<PokerTracker.ViewModels.Announcements.AnnouncementViewModel>());
 
             // Act
-            var result = controller.Index();
+            var result = await controller.Index();
 
             // Assert
             Assert.That(result, Is.InstanceOf<ViewResult>());

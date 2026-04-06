@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<PokerTracker.ViewModels.Announcements.AnnouncementViewModel>
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -78,8 +79,69 @@
                 </div>
             </div>
         </div>
-        <div class="container py-5">
-            <hr class="my-5 opacity-25">
+
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="container mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-warning pb-2">
+            <h2 class="h3 fw-bold text-warning mb-0"><i class="bi bi-megaphone-fill me-2"></i> Latest Announcements</h2>
+        </div>
+        
+        <div class="row g-4">
+            @foreach (var announcement in Model.Take(3))
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 shadow border-0 hover-effect rounded-4 overflow-hidden" 
+                         style="cursor: pointer; transition: transform 0.2s;" 
+                         data-bs-toggle="modal" data-bs-target="#announcementModal-@announcement.Id">
+                        
+                        <div class="card-body p-4 bg-dark text-white">
+                            <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill">
+                                <i class="bi bi-calendar-event me-1"></i> @announcement.PublishedOn.ToString("MMM dd, yyyy")
+                            </span>
+                            <h5 class="card-title fw-bold text-light mb-3">@announcement.Title</h5>
+                            <p class="card-text text-white-50">
+                                @(announcement.Content.Length > 100 ? announcement.Content.Substring(0, 100) + "..." : announcement.Content)
+                            </p>
+                        </div>
+                        <div class="card-footer bg-dark border-top border-secondary pt-3 pb-4 px-4 text-end">
+                            <span class="text-warning small fw-bold text-uppercase" style="letter-spacing: 1px;">Read More <i class="bi bi-arrow-right ms-1"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="announcementModal-@announcement.Id" tabindex="-1" aria-labelledby="announcementModalLabel-@announcement.Id" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                        <div class="modal-content bg-dark text-white border-secondary shadow-lg rounded-4">
+                            <div class="modal-header border-secondary bg-gradient bg-warning text-dark">
+                                <h5 class="modal-title fw-bold" id="announcementModalLabel-@announcement.Id">
+                                    <i class="bi bi-megaphone-fill me-2 fs-5"></i>@announcement.Title
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            
+                            <div class="modal-body p-4 p-md-5 text-start overflow-y-auto" style="max-height: 60vh;">
+                                <p class="text-muted small mb-4 border-bottom border-secondary pb-3">
+                                    <i class="bi bi-calendar-event me-2"></i>Published on @announcement.PublishedOn.ToString("MMMM dd, yyyy")
+                                </p>
+                                <div class="text-light opacity-75" style="white-space: pre-wrap; word-break: break-word; font-size: 1.1rem; line-height: 1.6;">@announcement.Content</div>
+                            </div>
+                            
+                            <div class="modal-footer border-secondary">
+                                <button type="button" class="btn btn-outline-secondary text-white rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+<div class="container py-3">
+    <hr class="mt-0 mb-5 opacity-25">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6">
                     <h2 class="display-5 fw-bold lh-1 mb-4">Master Your <span class="text-warning">Tournament Entry</span></h2>

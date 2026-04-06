@@ -17,6 +17,7 @@ namespace PokerTracker.Data
         public virtual DbSet<TournamentFormat> TournamentFormats { get; set; } = null!;
         public virtual DbSet<PlayerTournament> PlayersTournaments { get; set; } = null!;
         public virtual DbSet<Location> Locations { get; set; } = null!;
+        public virtual DbSet<Announcement> Announcements { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -65,6 +66,7 @@ namespace PokerTracker.Data
             builder.Entity<Location>().HasQueryFilter(l => !l.IsDeleted);
             builder.Entity<Tournament>().HasQueryFilter(t => !t.IsDeleted);
             builder.Entity<PlayerTournament>().HasQueryFilter(pt => !pt.Tournament.IsDeleted);
+            builder.Entity<Announcement>().HasQueryFilter(a => !a.IsDeleted);
 
             // Seed initial tournament formats
             builder.Entity<TournamentFormat>().HasData(
@@ -82,6 +84,7 @@ namespace PokerTracker.Data
             builder.ApplyConfiguration(new LocationSeedConfiguration());
             builder.ApplyConfiguration(new TournamentSeedConfiguration());
             builder.ApplyConfiguration(new PlayerTournamentSeedConfiguration());
+            builder.ApplyConfiguration(new AnnouncementSeedConfiguration());
         }
     }
 }

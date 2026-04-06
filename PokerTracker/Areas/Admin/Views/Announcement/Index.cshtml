@@ -1,0 +1,77 @@
+@model IEnumerable<PokerTracker.ViewModels.Announcements.AnnouncementViewModel>
+
+@{
+    ViewData["Title"] = "Announcement Management";
+}
+
+<partial name="_StatusMessages" />
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary btn-sm fw-bold">
+            <i class="bi bi-arrow-left"></i> Back to Admin Dashboard
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-warning"><i class="bi bi-megaphone-fill me-2"></i>Announcement Management</h2>
+        <a asp-action="Create" class="btn btn-warning shadow-sm fw-bold">
+            <i class="bi bi-plus-circle me-1"></i> Add Announcement
+        </a>
+    </div>
+
+    <div class="card bg-dark text-white border-secondary shadow">
+        <div class="card-body p-0">
+            <table class="table table-dark table-striped table-hover mb-0">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Title</th>
+                        <th>Published On</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var announcement in Model)
+                        {
+                            <tr class="align-middle">
+                                <td>@announcement.Title</td>
+                                <td>@announcement.PublishedOn.ToShortDateString()</td>
+                                <td>
+                                    @if (announcement.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Edit" asp-route-id="@announcement.Id" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@announcement.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this announcement?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No announcements found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

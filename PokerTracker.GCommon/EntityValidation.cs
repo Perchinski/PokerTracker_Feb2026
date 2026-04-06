@@ -39,6 +39,14 @@ namespace PokerTracker.GCommon
             public const int MaxImageUrlLength = 2048;
         }
 
+        public static class Announcement
+        {
+            public const int MinTitleLength = 3;
+            public const int MaxTitleLength = 150;
+            public const int MinContentLength = 5;
+            public const int MaxContentLength = 5000;
+        }
+
         public static class ErrorMessages
         {
             public const string RequiredMessage = "{0} is required.";

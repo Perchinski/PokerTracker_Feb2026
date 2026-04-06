@@ -11,18 +11,21 @@ namespace PokerTracker.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> logger;
+        private readonly PokerTracker.Services.Core.Contracts.IAnnouncementService announcementService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, PokerTracker.Services.Core.Contracts.IAnnouncementService announcementService)
         {
             this.logger = logger;
+            this.announcementService = announcementService;
         }
 
         /// <summary>
         /// Displays the landing page for the application.
         /// </summary>
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var announcements = await announcementService.GetAllAsync(includeInactive: false);
+            return View(announcements);
         }
 
         /// <summary>

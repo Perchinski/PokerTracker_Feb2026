@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokerTracker.Data;
 
@@ -11,9 +12,11 @@ using PokerTracker.Data;
 namespace PokerTracker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260406162540_AddAnnouncements")]
+    partial class AddAnnouncements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,13 +160,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2f9de94f-ca11-4c0b-9486-ca7588b1c863",
+                            ConcurrencyStamp = "1b437c88-05a7-4299-8f80-a8f1be295ee4",
                             Email = "admin1@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN1@POKERTRACKER.COM",
                             NormalizedUserName = "ADMIN1@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGzeT0sGCaCT9s+2kJbTrxZ2g/dZ60xDKTO+Hn0e7TYpbFlwlR6wJxwFfpABFMJsbg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPRyXMGp/aDMGQEmT2D3wqHC7iBvOJo5tDWsMgDrDuZapy80g+YqniJ3N+JbS4GDpQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-A1",
                             TwoFactorEnabled = false,
@@ -173,13 +176,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "34f68282-5102-43e9-9916-74c776c1edcb",
+                            ConcurrencyStamp = "5acb1583-e456-4b46-9a8e-66400087fd11",
                             Email = "player1@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER1@POKERTRACKER.COM",
                             NormalizedUserName = "PLAYER1@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO4JdZWgVhIUghHbkLtw6nK3OyF/CExoCkJ4lVZlzz+jxKru12fqIlyGZAZYR1T5AQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKdH7jsd4obzjFyE21MfNGdGHiAukuOmuVa043KFT6HoeNVJkO0ofxP8VPowdHVduA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-P1",
                             TwoFactorEnabled = false,
@@ -189,13 +192,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "f6e5d4c3-b2a1-4f7e-9d8c-1a2b3c4d5e6f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a461cf15-12d2-4274-977f-95e0d518aa4a",
+                            ConcurrencyStamp = "9c18cec2-1db2-4c82-9046-3ae008e1247c",
                             Email = "player2@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER2@POKERTRACKER.COM",
                             NormalizedUserName = "PLAYER2@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPZRUFkuG9xXPVrmKY+Ve2J844RuuMZ69sg48AET0olY6txcrZKAmhWswABgIu/C0w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKBnypWpaxctCjN/QhVa21CsyVEoc7Mrajf4Ny3DY9MNP1NUwcZ2XFmrBPR74mHc4A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-P2",
                             TwoFactorEnabled = false,
@@ -321,9 +324,6 @@ namespace PokerTracker.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("PublishedOn")
                         .HasColumnType("datetime2");
 
@@ -335,17 +335,6 @@ namespace PokerTracker.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Announcements");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Content = "We are thrilled to launch the new version of our internal poker tracking system. You can now easily create tournaments, manage players, and keep track of your local rankings.\n\nMore features like leaderboards and advanced statistics will be coming soon!",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublishedOn = new DateTime(2026, 4, 1, 10, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "Welcome to the New Poker Tracker!"
-                        });
                 });
 
             modelBuilder.Entity("PokerTracker.Data.Models.Location", b =>
@@ -515,7 +504,7 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = 1,
                             CreatorId = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-                            Date = new DateTime(2027, 3, 14, 20, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 14, 20, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Casual no-limit game. $20 buy-in, winner takes all!",
                             FormatId = 1,
                             ImageUrl = "https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=800",

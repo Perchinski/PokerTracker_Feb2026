@@ -21,7 +21,7 @@ namespace PokerTracker.Data.SeedData
                     Name = "Friday Night Holdem",
                     Description = "Casual no-limit game. $20 buy-in, winner takes all!",
                     FormatId = 1, // Texas Hold'em - No Limit
-                    Date = new DateTime(2026, 3, 14, 20, 0, 0),
+                    Date = new DateTime(2027, 3, 14, 20, 0, 0),
                     CreatorId = SeedConstants.PlayerOneId,
                     Status = TournamentStatus.Open,
                     LocationId = 1,
