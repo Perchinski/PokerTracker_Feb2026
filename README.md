@@ -7,7 +7,7 @@
 * 🏆 **Tournament Lifecycle** — Transition games from *Open* → *Running* → *Finished*.
 * 👥 **Real-time Rosters** — Dynamic player registration.
 * 👑 **Hall of Fame** — Track historical performance by checking previous winners.
-* 🔍 **Advanced Filtering** — Search by name/format, and toggle views based on user involvement.
+* 🔍 **Advanced Filtering & Pagination** — Search by name/format, toggle views based on user involvement, and efficiently navigate through large lists of tournaments with built-in pagination.
 * 📢 **Admin Announcements & Locations** — Manage upcoming events and game locations effortlessly.
 
 ---
@@ -143,19 +143,34 @@ The database is seeded with three ready-to-use accounts (including an admin) and
 ## 📸 Screenshots
 
 ### Home Page
-<img width="2560" height="1440" alt="PokerTracker_Home_Index" src="https://github.com/user-attachments/assets/a1e3f38a-481a-4b52-aa60-b539ec95ff74" />
+<img width="2560" height="1440" alt="Screenshot (10)" src="https://github.com/user-attachments/assets/296bab36-b0b1-4949-9b1e-380a24313b94" />
 
 ### Tournament List
-<img width="2560" height="1440" alt="PokerTracker_Tournaments_Index" src="https://github.com/user-attachments/assets/bc509434-9c45-4b59-98d2-ee17391250f8" />
+<img width="2560" height="1440" alt="Screenshot (11)" src="https://github.com/user-attachments/assets/46340009-1278-4419-b995-7f1ea17abf3f" />
 
 ### Tournament Details
-<img width="2560" height="1440" alt="PokerTracker_Tournament_Details" src="https://github.com/user-attachments/assets/2fd5cc86-003e-48db-a269-6f0430cd5f07" />
+<img width="2560" height="1440" alt="Screenshot (12)" src="https://github.com/user-attachments/assets/e4a76998-03d7-488b-9e0b-0e69ff05d395" />
 
-### Create Tournament
-<img width="2560" height="1440" alt="PokerTracker_Tournaments_Create" src="https://github.com/user-attachments/assets/3e9bb19f-1bd0-4a41-b97d-0f059eaafdd6" />
+### Edit Tournament
+<img width="2560" height="1440" alt="Screenshot (13)" src="https://github.com/user-attachments/assets/df460053-9bda-4107-8526-cf30cc373195" />
 
 ### Select Winner
 <img width="2560" height="1440" alt="PokerTracker_Tournament_SelectWinner" src="https://github.com/user-attachments/assets/abdc21b6-76f4-44e0-8ff2-e0cb253189af" />
+
+### Admin Panel
+<img width="2560" height="1440" alt="Screenshot (14)" src="https://github.com/user-attachments/assets/b44ce5c3-9bcd-49b6-a80f-7820bf4bea16" />
+
+### Location Management
+<img width="2560" height="1440" alt="Screenshot (15)" src="https://github.com/user-attachments/assets/134fb9a0-cd60-46a1-94d7-954508a35977" />
+
+### Add Location
+<img width="2560" height="1440" alt="Screenshot (18)" src="https://github.com/user-attachments/assets/6ea76f9e-3553-4674-9954-22c37468f0a7" />
+
+### User Management
+<img width="2560" height="1440" alt="Screenshot (16)" src="https://github.com/user-attachments/assets/1d1865bf-b672-4753-90d9-27d6c0935fa6" />
+
+### Announcement Management
+<img width="2560" height="1440" alt="Screenshot (17)" src="https://github.com/user-attachments/assets/51cfe3aa-ddb8-486e-93d1-a2c2e6af817f" />
 
 ---
 
