@@ -1,0 +1,45 @@
+<footer class="footer-dark text-white pt-5 pb-4 mt-auto">
+    <div class="container text-center text-md-start">
+        <div class="row text-center text-md-start">
+
+            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-warning">
+                    <i class="bi bi-suit-spade-fill me-2"></i>PokerTracker
+                </h5>
+                <p>
+                    The ultimate platform to host, manage, and track your private poker tournaments.
+                    Elevate your game night with professional tools.
+                </p>
+            </div>
+
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-warning">Products</h5>
+                <p><a asp-controller="Tournament" asp-action="Index" class="text-white text-decoration-none hover-gold">Tournaments</a></p>
+                <p><a asp-controller="Tournament" asp-action="Add" class="text-white text-decoration-none hover-gold">Host a Game</a></p>
+            </div>
+
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-warning">Useful links</h5>
+                <p><a asp-controller="Home" asp-action="Index" class="text-white text-decoration-none hover-gold">Home</a></p>
+                <p><a asp-controller="Home" asp-action="Privacy" class="text-white text-decoration-none hover-gold">Privacy Policy</a></p>
+            </div>
+
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-warning">Contact</h5>
+                <p><i class="bi bi-house-door-fill me-3"></i> Sofia, BG 1000, US</p>
+                <p><i class="bi bi-envelope-fill me-3"></i> -----@@pokertracker.com</p>
+                <p><i class="bi bi-phone-fill me-3"></i> + 01 234 567 88</p>
+            </div>
+        </div>
+
+        <hr class="mb-4 border-secondary">
+
+        <div class="row align-items-center">
+            <div class="col-md-7 col-lg-8">
+                <p class="text-white-50">
+                    © @DateTime.Now.Year <strong>PokerTracker</strong>. All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

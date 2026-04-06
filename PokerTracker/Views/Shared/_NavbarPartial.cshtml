@@ -1,0 +1,38 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-suit-spade-fill text-warning me-2 fs-4"></i>
+                <span class="fw-bold tracking-tight">POKER<span class="text-warning">TRACKER</span></span>
+            </a>
+
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <i class="bi bi-list fs-2 text-white"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link px-3" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" asp-area="" asp-controller="Tournament" asp-action="Index">Tournaments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                    @if (User.IsInRole(PokerTracker.GCommon.ApplicationConstants.Roles.Administrator))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link fw-bold" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                <span class="text-warning">Admin Panel</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+</header>

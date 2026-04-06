@@ -41,6 +41,14 @@
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
                         </div>
 
+                        <div class="form-check mb-4 text-start">
+                            <input class="form-check-input" type="checkbox" asp-for="Input.IsEighteenOrOlder" id="eighteenCheck" required="required">
+                            <label class="form-check-label text-white small" for="eighteenCheck">
+                                @Html.DisplayNameFor(m => m.Input.IsEighteenOrOlder)
+                            </label>
+                            <span asp-validation-for="Input.IsEighteenOrOlder" class="text-danger small d-block"></span>
+                        </div>
+
                         <div class="d-grid gap-2">
                             <button id="registerSubmit" type="submit" class="btn btn-warning btn-lg fw-bold shadow-sm pulse-button">
                                 Register

@@ -21,6 +21,14 @@ using Microsoft.Extensions.Logging;
 
 namespace PokerTracker.Areas.Identity.Pages.Account
 {
+    public class EnforceTrueAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            return value is bool b && b;
+        }
+    }
+
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -97,6 +105,10 @@ namespace PokerTracker.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [EnforceTrue(ErrorMessage = "You must confirm that you are at least 18 years old.")]
+            [Display(Name = "I confirm that I am 18 years or older.")]
+            public bool IsEighteenOrOlder { get; set; }
         }
 
 
