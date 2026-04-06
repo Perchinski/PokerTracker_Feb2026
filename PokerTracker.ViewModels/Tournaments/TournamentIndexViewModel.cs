@@ -23,6 +23,7 @@ namespace PokerTracker.ViewModels.Tournaments
         public DateTime Date { get; set; }
         public string Status { get; set; } = null!;
         public string LocationName { get; set; } = null!;
+        public string LocationCity { get; set; } = null!;
         public string? ImageUrl { get; set; }
 
         /// <summary>

@@ -78,8 +78,12 @@ namespace PokerTracker.Services.Core
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var normalizedSearch = searchTerm.Trim().ToLower();
-                query = query.Where(t => t.Name.ToLower().Contains(normalizedSearch)
-                                      || t.Description.ToLower().Contains(normalizedSearch));
+                query = query.Where(t => 
+                                      (t.Name != null && t.Name.ToLower().Contains(normalizedSearch))
+                                      || (t.Description != null && t.Description.ToLower().Contains(normalizedSearch))
+                                      || (t.Location != null && t.Location.Name != null && t.Location.Name.ToLower().Contains(normalizedSearch))
+                                      || (t.Location != null && t.Location.City != null && t.Location.City.ToLower().Contains(normalizedSearch))
+                                      || (t.Location != null && t.Location.Address != null && t.Location.Address.ToLower().Contains(normalizedSearch)));
             }
 
             if (onlyJoined && !string.IsNullOrEmpty(userId))
@@ -123,6 +127,7 @@ namespace PokerTracker.Services.Core
                     Date = t.Date,
                     Format = t.Format.Name,
                     LocationName = t.Location.Name,
+                    LocationCity = t.Location.City,
                     Status = t.Status.ToString(),
                     PlayersCount = t.PlayersTournaments.Count,
                     ImageUrl = t.ImageUrl,

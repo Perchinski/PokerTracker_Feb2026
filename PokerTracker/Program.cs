@@ -33,7 +33,10 @@ namespace PokerTracker
                 options.AccessDeniedPath = "/Home/AccessDenied";
             });
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute>();
+            });
 
             // Auto-register Repositories
             builder.Services.RegisterAssemblyTypesAsScoped(typeof(TournamentRepository), "Repository");
@@ -56,6 +59,14 @@ namespace PokerTracker
             }
 
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Append("X-Frame-Options", "DENY");
+                context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+                await next();
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
