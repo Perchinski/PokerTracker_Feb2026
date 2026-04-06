@@ -1,19 +1,14 @@
 # ♠️ PokerTracker
 
-A sleek, high-performance web application for organizing, managing, and tracking private poker tournaments. Built with **ASP.NET Core MVC** and **.NET 8**.
+## 📖 Project Concept & Features
+**PokerTracker** is a sleek, high-performance web application designed to organize, manage, and track private poker tournaments and competitive series.
 
----
-
-## 📖 About
-**PokerTracker** simplifies the logistics of home games and competitive series. Create and join tournaments, manage the live game lifecycle, and crown your champions—all from a single, responsive dashboard.
-
-## ✨ Key Features
 * 🔐 **Identity Management** — Secure registration and login powered by ASP.NET Core Identity.
-* 🏆 **Tournament Lifecycle** — Transition games through *Open* → *Running* → *Finished* stages.
-* 👥 **Real-time Rosters** — Dynamic player registration; join or leave with a single click.
-* 👑 **Hall of Fame** — Assign winners to finished tournaments to track historical performance.
-* 🔍 **Advanced Filtering** — Search by name or format, and toggle "Joined" or "Owned" views.
-* 🎨 **Poker Aesthetic** — A modern dark-themed UI built with Bootstrap 5 and Bootstrap Icons.
+* 🏆 **Tournament Lifecycle** — Transition games from *Open* → *Running* → *Finished*.
+* 👥 **Real-time Rosters** — Dynamic player registration.
+* 👑 **Hall of Fame** — Track historical performance by checking previous winners.
+* 🔍 **Advanced Filtering** — Search by name/format, and toggle views based on user involvement.
+* 📢 **Admin Announcements & Locations** — Manage upcoming events and game locations effortlessly.
 
 ---
 
@@ -24,24 +19,43 @@ A sleek, high-performance web application for organizing, managing, and tracking
 | **Framework** | ASP.NET Core MVC (.NET 8) |
 | **Authentication** | ASP.NET Core Identity (UI via Razor Pages) |
 | **Database** | SQL Server + Entity Framework Core |
-| **Frontend** | Razor Views, Bootstrap 5, CSS3 Custom Properties |
-| **Architecture** | Service Layer Pattern with Dependency Injection |
+| **Frontend** | Razor Views, Bootstrap 5, CSS3 Custom Properties, jQuery |
+| **Testing** | NUnit, Moq, WebApplicationFactory |
 
 ---
 
-## 📁 Project Structure
-```text
-PokerTracker/                → Web Layer (Controllers, Views, Static Assets)
-PokerTracker.Data.Models/    → Domain Entities (Tournament, Player, etc.)
-PokerTracker.Data/           → Data Context, Seed Data, Migrations, & Configurations
-PokerTracker.ViewModels/     → Data Transfer Objects (DTOs) for Views
-PokerTracker.Services.Core/  → Business Logic & Service Interfaces
-PokerTracker.Common/         → Constants, Enums, and Shared Validation
-```
+## 🏗️ Architecture & Layers
+The application strictly follows an **N-Tier Architecture** with separated concerns:
+
+* **Web Layer (`PokerTracker`):** Contains Controllers, Views, and static assets. Responsible for handling HTTP requests, user sessions, and returning UI views.
+* **Services Layer (`PokerTracker.Services.Core`):** Houses the core business logic, acting as the bridge between the Web layer and Data access.
+* **Data Layer (`PokerTracker.Data`):** Contains the EF Core `ApplicationDbContext`, Migrations, Repository implementations, and Seed Configurations.
+* **Domain Models (`PokerTracker.Data.Models`):** Defines the core entities matching database tables.
+* **ViewModels (`PokerTracker.ViewModels`):** Data Transfer Objects (DTOs) tailored precisely to what the Views need to display or post.
+* **Cross-Cutting Concerns (`PokerTracker.GCommon`):** Houses shared constants and validations accessible by all other layers.
+
+### 🧪 Test Suite
+* **`PokerTracker.Services.Tests`:** NUnit test project containing 100% coverage for all business logic and edge cases.
+* **`PokerTracker.Web.Tests`:** Contains integration tests and controller routing validation using `WebApplicationFactory`.
+
+## 🧠 Design Decisions
+* **Custom DI Extension:** A cleaner `Program.cs` is achieved through a custom Dependency Injection extension method with assembly scanning, which registers services automatically.
+* **Repository Pattern:** Centralizes data access logic, enabling easier testing and business logic decoupling.
+* **Global Exception Handling:** Ensures unexpected errors are gracefully caught and dealt with, providing friendly error views to users and maintaining application stability.
+
+## ✅ Validations
+* **Server-side Validation:** Comprehensive use of Data Annotations on ViewModels and Entities to enforce constraints.
+* **Client-side Validation:** Handled via jQuery and ASP.NET Core validation scripts for immediate feedback without full page reloads.
+
+## 🗃️ Database & Seeding
+* **Custom Entities:** Features specialized entities including `Tournament`, `Player`, `Location`, `Announcement`, and more.
+* **Seed Data:** * Automatically populates the **Admin** role and assigns it to specific users upon first run.
+  * Injects standard tournament formats, initial demo users, locations, and announcements.
+* **Soft Delete:** Implemented efficiently to retain records behind the scenes while keeping UI views clean.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Setup Instructions
 
 ### Prerequisites
 * [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
@@ -55,58 +69,58 @@ PokerTracker.Common/         → Constants, Enums, and Shared Validation
    cd PokerTracker_Feb2026
    ```
 
-2. **Configure Connection String and select PokerTracker as your startup project**
+2. **Configure Database Connection**
+   You can configure your SQL Server connection string using **User Secrets** (Recommended) or by modifying the `appsettings.Development.json` file.
 
-   Update `PokerTracker/appsettings.Development.json` with your local SQL Server instance:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PokerTracker;Trusted_Connection=True;Encrypt=False"
-   }
-   ```
-   Configure the Startup Projects and select PokerTracker as the startup project
+   **Option A: Using User Secrets (Visual Studio)**
+   * Right-click the `PokerTracker` project in the Solution Explorer and select **Manage User Secrets**.
+   * Add the following JSON to the `secrets.json` file that opens and update the connection string:
+     
+     ```json
+     {
+       "ConnectionStrings": {
+         "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PokerTracker;Trusted_Connection=True;Encrypt=False"
+       }
+     }
+     ```
 
-4. **Initialize Database (Package Manager Console)**
-
+   **Option B: Using appsettings.Development.json**
+   * Open `PokerTracker/appsettings.Development.json` and update the connection string:
+     
+     ```json
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PokerTracker;Trusted_Connection=True;Encrypt=False"
+     }
+     ```
+   
+   *Note: Configure the Startup Projects and select `PokerTracker` as the startup project.*
+3. **Initialize Database (Package Manager Console)**
    Open the console by navigating to Tools > NuGet Package Manager > Package Manager Console.
+
+   Select `PokerTracker.Data` in the "Default project" dropdown at the top of the console.
 
    Run the following command:
    ```powershell
-   Update-Database -Project PokerTracker.Data -StartupProject PokerTracker
-   ```
-   This creates the database, seeds tournament formats, demo users, and sample tournaments.
-
-   Note: If "PokerTracker" is already set as your startup project in the Solution Explorer, and "PokerTracker.Data" is selected in the "Default project" dropdown at the top of the console, you can    simply run:
-    ```powershell
    Update-Database
    ```
 
-6. **Run Application**
+5. **Run Application**
    ```bash
    dotnet run --project PokerTracker
    ```
    Or open `PokerTracker.sln` in Visual Studio and press **F5**.
 
-7. **Register an account or log in with a demo account** and start creating tournaments!
-   
 ---
 
 ## 🧪 Demo Accounts
 
-The database is seeded with two ready-to-use accounts and sample tournaments so you can explore immediately:
+The database is seeded with three ready-to-use accounts (including an admin) and sample tournaments so you can explore immediately:
 
-| Account | Email | Password |
-|---------|-------|----------|
-| **Player 1** | `player1@pokertracker.com` | `Player1!` |
-| **Player 2** | `player2@pokertracker.com` | `Player2!` |
-
-### Seeded Tournaments
-
-| Tournament | Format | Status | Created By | Winner |
-|-----------|--------|--------|------------|--------|
-| Friday Night Holdem | Texas Hold'em - No Limit | 🟢 Open | Player 1 | — |
-| Weekend Bounty Bash | Bounty / Knockout | ⚫ Finished | Player 2 | Player 1 |
-
-Both players are registered in both tournaments. Log in as either account to see the "Joined" and "Your Tournament" badges in action.
+| Account | Email | Password | Role |
+|---------|-------|----------|------|
+| **Admin** | `admin1@pokertracker.com` | `Admin1!` | Administrator |
+| **Player 1** | `player1@pokertracker.com` | `Player1!` | User |
+| **Player 2** | `player2@pokertracker.com` | `Player2!` | User |
 
 ---
 
@@ -115,13 +129,14 @@ Both players are registered in both tournaments. Log in as either account to see
 ### Tournament Lifecycle
 | Status | Permissions & Actions |
 | :--- | :--- |
-| 🟢 **Open** | Players can join/leave. Owners can Edit, Delete, or Start the game. |
+| 🟢 **Open** | Players can join/leave. Owners/Admins can Edit, Delete, or Start the game. |
 | 🟡 **Running** | Game is active. Roster is locked. Owner can click "Finish." |
 | 🔴 **Finished** | Game concluded. Owner selects the Winner from the roster. |
 
 ### User Roles
-* **Owner (Host):** The creator. Has full administrative rights over the tournament lifecycle.
-* **Player:** Registered users. Can browse and join open games.
+* **Administrator:** System-wide authority. Has the ability to create, edit, and delete global Locations and Announcements, as well as moderate all tournaments.
+* **Owner (Host):** The creator of a specific tournament. Has full administrative rights over that tournament's lifecycle and roster.
+* **Player:** Registered users. Can browse global events, read announcements, and join open games.
 
 ---
 
@@ -141,33 +156,6 @@ Both players are registered in both tournaments. Log in as either account to see
 
 ### Select Winner
 <img width="2560" height="1440" alt="PokerTracker_Tournament_SelectWinner" src="https://github.com/user-attachments/assets/abdc21b6-76f4-44e0-8ff2-e0cb253189af" />
-
----
-
-
-## ⚙️ Configuration
-Manage security and lockout policies directly via `appsettings.json` without touching the source code:
-
-```json
-"IdentityOptions": {
-  "Password": {
-    "RequireDigit": true,
-    "RequiredLength": 6,
-    "RequireUppercase": false
-  },
-  "Lockout": {
-    "MaxFailedAccessAttempts": 5,
-    "DefaultLockoutTimeSpanMin": 5
-  }
-}
-```
-
----
-
-## 🗃️ Database Features
-* **Soft Delete:** Uses a Global Query Filter on `IsDeleted` so data is never truly lost, just hidden from the UI.
-* **Seeded Data:** Automatically populates 6 standard formats (Texas Hold'em, Omaha, etc.) on the first migration.
-* **Referential Integrity:** Configured with `DeleteBehavior.Restrict` on critical links to prevent accidental data loss of tournament history.
 
 ---
 
