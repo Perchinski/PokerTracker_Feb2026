@@ -18,6 +18,8 @@ namespace PokerTracker.ViewModels.Admin.Locations
         public string? ImageUrl { get; set; }
         public bool IsActive { get; set; }
         public int TournamentCount { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
     }
 
     // Used for the Create and Edit forms
@@ -44,5 +46,11 @@ namespace PokerTracker.ViewModels.Admin.Locations
 
         [Display(Name = "Is Active (Available for new tournaments)")]
         public bool IsActive { get; set; } = true;
+
+        [Required(ErrorMessage = "Please select a location on the map.")]
+        public double? Latitude { get; set; }
+
+        [Required(ErrorMessage = "Please select a location on the map.")]
+        public double? Longitude { get; set; }
     }
 }

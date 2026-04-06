@@ -5,13 +5,22 @@
 }
 
 <div class="container py-5">
-    <div class="mb-3">
+<div class="mb-3">
+    @if (ViewBag.TournamentId != null)
+    {
+        <a asp-controller="Tournament" asp-action="Details" asp-route-id="@ViewBag.TournamentId" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to Tournament
+        </a>
+    }
+    else
+    {
         <a asp-controller="Tournament" asp-action="Index" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-arrow-left"></i> Back to All Tournaments
         </a>
-    </div>
+    }
+</div>
 
-    <div class="row align-items-center justify-content-center">
+<div class="row align-items-center justify-content-center">
         <div class="col-lg-8">
             <div class="card border-0 shadow-lg overflow-hidden">
                 @if (!string.IsNullOrEmpty(Model.ImageUrl))
@@ -50,10 +59,49 @@
                     }
 
                     <div class="mt-4 pt-3 border-top">
-                        <h5 class="text-muted mb-0">Total Tournaments Hosted Here: <span class="badge bg-dark rounded-pill fs-6 ms-2">@Model.TournamentCount</span></h5>
+                        <h5 class="text-muted mb-3">Total Tournaments Hosted Here: <span class="badge bg-dark rounded-pill fs-6 ms-2">@Model.TournamentCount</span></h5>
+                        
+                        @if (Model.Latitude.HasValue && Model.Longitude.HasValue)
+                        {
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=@Model.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture),@Model.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)" 
+                               target="_blank" 
+                               class="btn btn-primary rounded-pill px-4 shadow-sm mb-4">
+                                <i class="bi bi-cursor-fill me-1"></i> Navigate with Google Maps
+                            </a>
+
+                            <div class="text-start text-muted mt-2">
+                                <h6>Location Map</h6>
+                                <div id="map" class="rounded border border-secondary shadow-sm" style="height: 350px; width: 100%;"></div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            @if (Model.Latitude.HasValue && Model.Longitude.HasValue)
+            {
+                <text>
+                var lat = @Model.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var lng = @Model.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var map = L.map('map').setView([lat, lng], 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+                L.marker([lat, lng])
+                 .addTo(map)
+                 .bindPopup("@(Html.Raw(Model.Name.Replace("\"", "\\\"")))")
+                 .openPopup();
+                </text>
+            }
+        });
+    </script>
+}

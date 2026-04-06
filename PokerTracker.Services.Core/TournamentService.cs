@@ -174,6 +174,8 @@ namespace PokerTracker.Services.Core
                 LocationAddress = tournament.Location.Address,
                 LocationCity = tournament.Location.City,
                 LocationImageUrl = tournament.Location.ImageUrl,
+                LocationLatitude = tournament.Location.Latitude,
+                LocationLongitude = tournament.Location.Longitude,
                 Creator = tournament.Creator.UserName ?? "Unknown",
                 Date = tournament.Date,
                 ImageUrl = tournament.ImageUrl,

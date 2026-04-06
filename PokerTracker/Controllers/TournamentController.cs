@@ -422,8 +422,9 @@ namespace PokerTracker.Controllers
         /// Displays the details of a specific location linked to a tournament.
         /// </summary>
         /// <param name="locationId">The identifier of the location.</param>
+        /// <param name="tournamentId">Optional identifier to link back to the tournament details.</param>
         [HttpGet]
-        public async Task<IActionResult> LocationDetails(int locationId)
+        public async Task<IActionResult> LocationDetails(int locationId, int? tournamentId)
         {
             var location = await locationService.GetLocationDetailsAsync(locationId);
 
@@ -432,6 +433,8 @@ namespace PokerTracker.Controllers
                 logger.LogWarning("Location with ID {LocationId} was not found", locationId);
                 return NotFound();
             }
+
+            ViewBag.TournamentId = tournamentId;
 
             return View(location);
         }

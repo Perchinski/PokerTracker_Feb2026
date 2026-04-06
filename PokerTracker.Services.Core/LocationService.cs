@@ -31,7 +31,9 @@ namespace PokerTracker.Services.Core
                     Address = l.Address,
                     ImageUrl = l.ImageUrl,
                     IsActive = l.IsActive,
-                    TournamentCount = l.Tournaments.Count
+                    TournamentCount = l.Tournaments.Count,
+                    Latitude = l.Latitude,
+                    Longitude = l.Longitude
                 })
                 .ToListAsync();
         }
@@ -50,7 +52,9 @@ namespace PokerTracker.Services.Core
                 Address = location.Address,
                 ImageUrl = location.ImageUrl,
                 IsActive = location.IsActive,
-                TournamentCount = location.Tournaments?.Count ?? 0
+                TournamentCount = location.Tournaments?.Count ?? 0,
+                Latitude = location.Latitude,
+                Longitude = location.Longitude
             };
         }
 
@@ -64,7 +68,9 @@ namespace PokerTracker.Services.Core
                 City = model.City,
                 ImageUrl = model.ImageUrl,
                 IsActive = model.IsActive,
-                IsDeleted = false
+                IsDeleted = false,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude
             };
 
             await repository.AddAsync(location);
@@ -83,7 +89,9 @@ namespace PokerTracker.Services.Core
                 Address = location.Address,
                 City = location.City,
                 ImageUrl = location.ImageUrl,
-                IsActive = location.IsActive
+                IsActive = location.IsActive,
+                Latitude = location.Latitude,
+                Longitude = location.Longitude
             };
         }
 
@@ -97,6 +105,8 @@ namespace PokerTracker.Services.Core
             location.City = model.City;
             location.ImageUrl = model.ImageUrl;
             location.IsActive = model.IsActive;
+            location.Latitude = model.Latitude;
+            location.Longitude = model.Longitude;
 
             await repository.SaveChangesAsync();
         }

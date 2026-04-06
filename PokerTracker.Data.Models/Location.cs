@@ -47,6 +47,16 @@ namespace PokerTracker.Data.Models
         public bool IsDeleted { get; set; } = false;
 
         /// <summary>
+        /// Latitude coordinate for mapping.
+        /// </summary>
+        public double? Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude coordinate for mapping.
+        /// </summary>
+        public double? Longitude { get; set; }
+
+        /// <summary>
         /// Navigation property: One Location can host many Tournaments.
         /// </summary>
         public ICollection<Tournament> Tournaments { get; set; } = new List<Tournament>();

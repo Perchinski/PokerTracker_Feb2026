@@ -6,3 +6,66 @@
 }
 
 <partial name="Create" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var defaultLat = 36.1699; // Default to Las Vegas
+            var defaultLng = -115.1398;
+            var latInput = document.getElementById('latInput');
+            var lngInput = document.getElementById('lngInput');
+
+            var initialLat = latInput.value ? parseFloat(latInput.value) : defaultLat;
+            var initialLng = lngInput.value ? parseFloat(lngInput.value) : defaultLng;
+
+            // wait for a moment for the partial view map div to load (if necessary)
+            setTimeout(() => {
+                var map = L.map('map').setView([initialLat, initialLng], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                var marker = null;
+                if (latInput.value && lngInput.value) {
+                    marker = L.marker([initialLat, initialLng]).addTo(map);
+                }
+
+                map.on('click', function (e) {
+                    var lat = e.latlng.lat;
+                    var lng = e.latlng.lng;
+
+                    if (marker) {
+                        marker.setLatLng(e.latlng);
+                    } else {
+                        marker = L.marker(e.latlng).addTo(map);
+                    }
+
+                    latInput.value = lat;
+                    lngInput.value = lng;
+
+                    // Reverse Geocoding
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.address) {
+                                var cityInput = document.getElementById('City');
+                                var addressInput = document.getElementById('Address');
+                                
+                                var city = data.address.city || data.address.town || data.address.village || data.address.county || '';
+                                var road = data.address.road || '';
+                                var house_number = data.address.house_number || '';
+                                var full_address = house_number ? `${house_number} ${road}` : road;
+
+                                if (city && cityInput) cityInput.value = city;
+                                if (full_address && addressInput) addressInput.value = full_address.trim() || data.display_name;
+                            }
+                        })
+                        .catch(error => console.error("Error fetching geocoding data:", error));
+                });
+            }, 100);
+        });
+    </script>
+}

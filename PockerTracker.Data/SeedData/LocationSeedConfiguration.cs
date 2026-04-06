@@ -17,7 +17,9 @@ namespace PokerTracker.Data.SeedData
                     City = "Las Vegas",
                     ImageUrl = "https://images.unsplash.com/photo-1590059530490-25251624c478?w=800",
                     IsActive = true,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Latitude = 36.1126,
+                    Longitude = -115.1767
                 },
                 new Location
                 {
@@ -27,7 +29,9 @@ namespace PokerTracker.Data.SeedData
                     City = "New York",
                     ImageUrl = "https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?w=800",
                     IsActive = true,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Latitude = 40.7128,
+                    Longitude = -74.0060
                 }
             );
         }

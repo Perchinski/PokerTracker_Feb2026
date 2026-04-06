@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokerTracker.Data;
 
@@ -11,9 +12,11 @@ using PokerTracker.Data;
 namespace PokerTracker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260406150048_AddGeolocationToLocation")]
+    partial class AddGeolocationToLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,13 +160,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e882bcf1-2102-4e3f-ae96-8ec7068f9020",
+                            ConcurrencyStamp = "5565c233-b822-41df-a1af-e92e4604d895",
                             Email = "admin1@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN1@POKERTRACKER.COM",
                             NormalizedUserName = "ADMIN1@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPAvJe0NiArdEWOJ1UVl49ujfXpGBYyVGhFx2wN7+ojuZt7cN/aa2Y/+nChhbKqiXA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEK8jAuKmNhThPZVXaL2Ou+fIx021P6GWAYY0AFQE0R8iC8dpF+k+uEXkTB4YxAy3wg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-A1",
                             TwoFactorEnabled = false,
@@ -173,13 +176,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "259420ed-8a24-4af8-85dc-a09604f2a09e",
+                            ConcurrencyStamp = "e3b93edc-5129-4b0b-9ff5-6caece2ef53d",
                             Email = "player1@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER1@POKERTRACKER.COM",
                             NormalizedUserName = "PLAYER1@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKdcR2eWkpqt/65tZickXDp5skkOPiDRN0bgEqzXC3+aEgaALfQI5rHm4ZhfJQV9GA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKuAXYuCXV2nMLxJlUGgn5p1lJr6BtqbNW61TvChAKy3M6pTcSCTu5Z7inGl4xbcvw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-P1",
                             TwoFactorEnabled = false,
@@ -189,13 +192,13 @@ namespace PokerTracker.Data.Migrations
                         {
                             Id = "f6e5d4c3-b2a1-4f7e-9d8c-1a2b3c4d5e6f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4a65949e-c916-4a59-937f-d7a9783a9c94",
+                            ConcurrencyStamp = "b7356b33-0f1e-4be9-97ec-b8cb4b100033",
                             Email = "player2@pokertracker.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER2@POKERTRACKER.COM",
                             NormalizedUserName = "PLAYER2@POKERTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAzRULhUZtj0uKoWFUEvmFcd62GxWaPVNTHdmlFdRMP5IuFFX9mMI0/BXn6WdPOU+w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP52fhgPl2wBwLjV0+VhZvlwc6n+t4DpuFWoa18T9JqfcXdJtzu4YcwB2+U5dLCCxA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-P2",
                             TwoFactorEnabled = false,
@@ -357,8 +360,6 @@ namespace PokerTracker.Data.Migrations
                             ImageUrl = "https://images.unsplash.com/photo-1590059530490-25251624c478?w=800",
                             IsActive = true,
                             IsDeleted = false,
-                            Latitude = 36.1126,
-                            Longitude = -115.1767,
                             Name = "Bellagio Casino"
                         },
                         new
@@ -369,8 +370,6 @@ namespace PokerTracker.Data.Migrations
                             ImageUrl = "https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?w=800",
                             IsActive = true,
                             IsDeleted = false,
-                            Latitude = 40.712800000000001,
-                            Longitude = -74.006,
                             Name = "Downtown Poker Club"
                         });
                 });
